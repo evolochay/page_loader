@@ -1,7 +1,5 @@
-# Loader: page loading
+# Автоматические тесты
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/fd8c1d51b5d2d6723f8b/maintainability)](https://codeclimate.com/github/foxy-chay/python-project-lvl3/maintainability)
+После завершения всех шагов в проекте, вам станут доступны автоматические тесты. Тесты запускаются на каждый коммит - после завершения всех заданий в интерфейсе Хекслета, сделайте коммит, и тесты заработают автоматически.
 
-[![Test Coverage](https://api.codeclimate.com/v1/badges/fd8c1d51b5d2d6723f8b/test_coverage)](https://codeclimate.com/github/foxy-chay/python-project-lvl3/test_coverage)
-
-## Description:
+Файл hexlet-check.yml отвечает за запуск этих тестов - не удаляйте этот файл, не редактируйте его и не переименовывайте репозиторий.
