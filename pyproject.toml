@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "hexlet-code"
+version = "0.1.0"
+description = ""
+authors = ["volochay <evgenia@volochay.info>"]
+packages = [
+  { include = "main" },
+]
+classifiers = [
+    "Topic :: Education",
+    "Programming Language :: Python :: 3"
+]
+repository = "https://github.com/foxy-chay/python-project-lvl3"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+PyYAML = "^6.0"
+pytest-cov = "^3.0.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^4.0.1"
+pytest = "^7.0.0"
+pytest-cov = "^3.0.0"
+
+[tool.poetry.scripts]
+main = "main.scripts.page_loader:main"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
