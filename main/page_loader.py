@@ -1,2 +1,3 @@
 def download():
-    print('here will be something')
+    string = 'here will be something'
+    return string
