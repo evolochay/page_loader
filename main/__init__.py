@@ -1,4 +1,4 @@
-from main.page_loader import download
+from main.loader import download
 __all__ = (
     download
 )

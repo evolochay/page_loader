@@ -16,6 +16,9 @@ repository = "https://github.com/foxy-chay/python-project-lvl3"
 python = "^3.8"
 PyYAML = "^6.0"
 pytest-cov = "^3.0.0"
+requests = "^2.27.1"
+pook = "^1.0.2"
+requests-mock = "^1.9.3"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^4.0.1"
@@ -23,7 +26,7 @@ pytest = "^7.0.0"
 pytest-cov = "^3.0.0"
 
 [tool.poetry.scripts]
-main = "main.scripts.page_loader:main"
+loader = "main.scripts.loader:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

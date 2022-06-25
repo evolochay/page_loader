@@ -6,8 +6,8 @@ build:
 	poetry build
 
 
-main:
-	poetry run main
+page-loader:
+	poetry run loader
 
 
 package-install:

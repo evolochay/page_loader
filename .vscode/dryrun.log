@@ -1,0 +1,8 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/evgenia/python-project-lvl3'
+poetry install
+make: Leaving directory `/Users/evgenia/python-project-lvl3'
+ 
+Makefile:26: warning: overriding commands for target `make'
+Makefile:22: warning: ignoring old commands for target `make'
+
