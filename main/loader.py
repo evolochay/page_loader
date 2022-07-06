@@ -5,49 +5,35 @@ from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 
 
-def download(dir_name, page_adress):
-    #main page download
-    page_for_saving = requests.get(page_adress)
-    soup = BeautifulSoup(page_for_saving.text, 'html.parser')
+def download(destination_dir_name, page_adress):
+    dir_for_files = create_dir(destination_dir_name, page_adress)
+    soup = create_soup(page_adress)
+    save_files(soup, dir_for_files, page_adress)
+    file_full_path = create_html(soup, page_adress, destination_dir_name)
 
-    #create dir for files
-    resources_dir = create_name(page_adress, 'directory')
-    files_dir_path = os.path.join(dir_name+'/', resources_dir)
-    create_dir(files_dir_path)
-    
-    #download image
-    domen_name = find_domen_name(page_adress)
-    image_url = domen_name + find_image_path(soup)
-    image_name = create_name(image_url, 'image')
-    # image_url https://mikhailovsky.ru/upload/resize_cache/iblock/3f2/336_336_1/kurenkova_ekaterina.jpg
-    image_link = download_image(image_url, image_name, files_dir_path)
+    return file_full_path
 
 
-    page_name = create_name(page_adress, 'page')
-    if os.path.isdir(dir_name):
-        file_full_path = os.path.join(dir_name+'/', page_name)
-        with open(file_full_path, 'w') as new_file:
+def create_html(soup, url, folder):
+    html_name = create_name(url, 'page')
+    page_path = os.path.join(folder+'/', html_name)
+    if os.path.isdir(folder):
+        with open(page_path, 'w') as new_file:
             new_file.write(soup.prettify())
-        return file_full_path
+    return page_path
 
 
-def create_name(some_url, type):    
+def create_name(some_url, type):
     without_scheme = some_url[some_url.find('//') + 2:]
     get_extension = os.path.splitext(some_url)
     if type == 'image':
-        name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme[:-4]) + get_extension[1]
+        name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme[:-4])
+        + get_extension[1]
     elif type == 'page':
         name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme) + '.html'
     elif type == 'directory':
         name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme[:-1]) + '_files'
     return name
-
-
-def find_image_path(soup):
-    resource_dict = {'img': 'src'}
-    images = soup.find_all(resource_dict)
-    for image in images:
-        return(image['src'])
 
 
 def find_domen_name(url):
@@ -56,10 +42,6 @@ def find_domen_name(url):
 
 
 def download_image(image_url, image_name, dir_path):
-    print('URL {}'.format(image_url))
-    print('NAME {}'.format(image_name))
-    print('DIR {}'.format(dir_path))
-
     response = requests.get(image_url)
     if response.ok:
         full_path = os.path.join(dir_path+'/', image_name)
@@ -68,7 +50,33 @@ def download_image(image_url, image_name, dir_path):
         return full_path
 
 
-def create_dir(path):
-   # head = os.path.split(url)[0]
-    if not os.path.exists(path):
-        os.mkdir(path)
+def create_dir(dir_name, page_adress):
+    resources_dir = create_name(page_adress, 'directory')
+    files_dir_path = os.path.join(dir_name+'/', resources_dir)
+    if not os.path.exists(files_dir_path):
+        os.mkdir(files_dir_path)
+    return files_dir_path
+
+
+def create_soup(url):
+    page_for_saving = requests.get(url)
+    soup = BeautifulSoup(page_for_saving.text, 'html.parser')
+    return soup
+
+
+def save_files(soup, dir_path, url):
+    domen = find_domen_name(url)
+    print(domen)
+    resource_dict = {'img': 'src'}
+    all_image_links = soup.find_all(resource_dict)
+    for image in all_image_links:
+        source_image = image.get('src')
+        print('URL {}'.format(source_image))
+        name = create_name(source_image, 'image')
+        local_path = os.path.join(dir_path, name)
+        response = requests.get(domen + '/' + source_image)
+        with open(local_path, 'wb') as f:
+            f.write(response.content)
+
+        for source in all_image_links:
+            source['src'] = source['src'].replace(source_image, local_path)
