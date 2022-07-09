@@ -27,12 +27,12 @@ def create_name(some_url, type):
     without_scheme = some_url[some_url.find('//') + 2:]
     get_extension = os.path.splitext(some_url)
     if type == 'image':
-        name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme[:-4])
-        + get_extension[1]
+        name = re.sub(r'[^a-zA-Z0-9]', '-',
+                      without_scheme[:-4]) + get_extension[1]
     elif type == 'page':
         name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme) + '.html'
     elif type == 'directory':
-        name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme[:-1]) + '_files'
+        name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme) + '_files'
     return name
 
 
@@ -66,7 +66,6 @@ def create_soup(url):
 
 def save_files(soup, dir_path, url):
     domen = find_domen_name(url)
-    print(domen)
     resource_dict = {'img': 'src'}
     all_image_links = soup.find_all(resource_dict)
     for image in all_image_links:
@@ -74,9 +73,11 @@ def save_files(soup, dir_path, url):
         print('URL {}'.format(source_image))
         name = create_name(source_image, 'image')
         local_path = os.path.join(dir_path, name)
-        response = requests.get(domen + '/' + source_image)
+        response = requests.get(domen+'/'+source_image)
         with open(local_path, 'wb') as f:
             f.write(response.content)
 
         for source in all_image_links:
-            source['src'] = source['src'].replace(source_image, local_path)
+            basedir = os.path.abspath(os.getcwd())
+            relative_path = os.path.relpath(local_path, basedir)
+            source['src'] = source['src'].replace(source_image, relative_path)
