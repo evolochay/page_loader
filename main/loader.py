@@ -52,6 +52,7 @@ def download_image(image_url, image_name, dir_path):
 
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, 'directory')
+    print('МОЖЕТ БЫТЬ ЭТО {}'.format(resources_dir))
     files_dir_path = os.path.join(dir_name+'/', resources_dir)
     if not os.path.exists(files_dir_path):
         os.mkdir(files_dir_path)
@@ -65,19 +66,18 @@ def create_soup(url):
 
 
 def save_files(soup, dir_path, url):
+    base_path_name = os.path.basename(dir_path)
     domen = find_domen_name(url)
     resource_dict = {'img': 'src'}
     all_image_links = soup.find_all(resource_dict)
     for image in all_image_links:
         source_image = image.get('src')
-        print('URL {}'.format(source_image))
         name = create_name(source_image, 'image')
         local_path = os.path.join(dir_path, name)
-        response = requests.get(domen+'/'+source_image)
+        relative_path = ('/'+os.path.join(base_path_name, name))
+        response = requests.get(domen+source_image)
         with open(local_path, 'wb') as f:
             f.write(response.content)
 
         for source in all_image_links:
-            basedir = os.path.abspath(os.getcwd())
-            relative_path = os.path.relpath(local_path, basedir)
             source['src'] = source['src'].replace(source_image, relative_path)
