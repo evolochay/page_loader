@@ -1,5 +1,5 @@
 from tempfile import TemporaryDirectory
-from main.loader import download, create_name
+from main.loader import download, create_name, find_domen_name
 import requests_mock
 import pytest
 from bs4 import BeautifulSoup
@@ -86,3 +86,7 @@ def test_dowloads2():
         actual_img = read_file(img_path, binary=True)
         assert actual_img == image
         assert len(result) > 0
+
+
+def test_find_domen_name():
+    assert 'https://ru.hexlet.io' == find_domen_name(URL_COURSES)

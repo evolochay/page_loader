@@ -68,6 +68,7 @@ def create_soup(url):
 def save_files(soup, dir_path, url):
     base_path_name = os.path.basename(dir_path)
     domen = find_domen_name(url)
+    print("URL {} DOMEN {}".format(url, domen))
     resource_dict = {'img': 'src'}
     all_image_links = soup.find_all(resource_dict)
     for image in all_image_links:
