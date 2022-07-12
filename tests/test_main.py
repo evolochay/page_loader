@@ -14,10 +14,16 @@ RAW = 'tests/fixtures/raw.html'
 IMG = 'tests/fixtures/image.png'
 HTML = 'tests/fixtures/expected2.html'
 URL = 'https://ru.hexlet.io'
+CSS = 'tests/fixtures/css_file.css'
+JS = 'tests/fixtures/js_file.js'
 URL_IMG = 'https://ru.hexlet.io/professions/python.png'
+URL_CSS = 'https://ru.hexlet.io/assets/application.css'
+URL_JS = 'https://ru.hexlet.io/packs/js/runtime.js'
 DIRECTORY = 'ru-hexlet-io_files'
 EXPECTED_HTML2 = 'ru-hexlet-io.html'
 EXPECTED_IMG = "ru-hexlet-io_files/professions-python.png"
+EXPECTED_CSS = "ru-hexlet-io_files/assets-application.css"
+EXPECTED_JS = "ru-hexlet-io_files/packs-js-runtime.js"
 
 
 def read_file(file_path, binary=False):
@@ -56,35 +62,38 @@ def test_create_file_name():
     assert result == EXPECTED_FILE_NAME
 
 
-def test_dowloads():
-    with TemporaryDirectory() as test_dir:
-        with requests_mock.Mocker() as mock:
-            test_file = read_file(EXPECTED_HTML)
-            soup = BeautifulSoup(test_file, 'html.parser')
-            mock.get(URL_Q, text = str(soup))
-            html_file_path = download(test_dir, URL_Q)
-            file1 = read_file(html_file_path)
-            assert test_file == file1
-
-
 def test_dowloads2():
     html_raw = read_file(RAW)
     html_expected = read_file(HTML)
     image = read_file(IMG, binary=True)
+    css = read_file(CSS, binary=True)
+    js = read_file(JS, binary=True)
 
     with requests_mock.Mocker() as m, TemporaryDirectory() as tmpdir:
         m.get(URL, text=html_raw)
         m.get(URL_IMG, content=image)
+        m.get(URL_CSS, content=css)
+        m.get(URL_JS, content=js)
         result = download(tmpdir, URL)
         print(result)
 
         html_path = os.path.join(tmpdir, EXPECTED_HTML2)
         img_path = os.path.join(tmpdir, EXPECTED_IMG)
+        css_path = os.path.join(tmpdir, EXPECTED_CSS)
+        js_path = os.path.join(tmpdir, EXPECTED_JS)
+
         actual_html = read_file(html_path)
         assert actual_html == html_expected
 
         actual_img = read_file(img_path, binary=True)
         assert actual_img == image
+
+        actual_css = read_file(css_path, binary=True)
+        assert actual_css == css
+
+        actual_js = read_file(js_path, binary=True)
+        assert actual_js == js
+
         assert len(result) > 0
 
 

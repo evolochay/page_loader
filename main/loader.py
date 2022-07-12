@@ -2,7 +2,7 @@ import requests
 import re
 import os
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 
 def download(destination_dir_name, page_adress):
@@ -52,7 +52,6 @@ def download_image(image_url, image_name, dir_path):
 
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, 'directory')
-    print('МОЖЕТ БЫТЬ ЭТО {}'.format(resources_dir))
     files_dir_path = os.path.join(dir_name+'/', resources_dir)
     if not os.path.exists(files_dir_path):
         os.mkdir(files_dir_path)
@@ -60,6 +59,7 @@ def create_dir(dir_name, page_adress):
 
 
 def create_soup(url):
+    print(url)
     page_for_saving = requests.get(url)
     soup = BeautifulSoup(page_for_saving.text, 'html.parser')
     return soup
@@ -67,18 +67,28 @@ def create_soup(url):
 
 def save_files(soup, dir_path, url):
     base_path_name = os.path.basename(dir_path)
-    domen = find_domen_name(url)
-    print("URL {} DOMEN {}".format(url, domen))
-    resource_dict = {'img': 'src'}
-    all_image_links = soup.find_all(resource_dict)
-    for image in all_image_links:
-        source_image = image.get('src')
-        name = create_name(source_image, 'image')
-        local_path = os.path.join(dir_path, name)
-        relative_path = ('/'+os.path.join(base_path_name, name))
-        response = requests.get(domen+source_image)
-        with open(local_path, 'wb') as f:
-            f.write(response.content)
-
-        for source in all_image_links:
-            source['src'] = source['src'].replace(source_image, relative_path)
+    domain_name = urlparse(url).netloc
+    resource_dict = {'img': 'src', 'link': 'href', 'script': 'src'}
+    for teg, atr in resource_dict.items():
+        all_links = soup.find_all(teg, attrs={atr: True})
+        for link in all_links:
+            print("LINK {}".format(link))
+            source_url = link[atr]
+            source_domain_name = urlparse(source_url).netloc
+            print('SOURCE URL {}'.format(source_url))
+            print('SOURCE domain {}'.format(source_domain_name))
+            if not source_domain_name or domain_name in source_domain_name:
+                if not source_domain_name:
+                    source_url = urljoin(url, source_url)
+                
+                name = create_name(source_url, 'image')
+                local_path = os.path.join(dir_path, name)
+                relative_path = ('/'+os.path.join(base_path_name, name))
+                print('relative_path {}'.format(relative_path))
+                response = requests.get(source_url)
+                link[atr] = relative_path
+                with open(local_path, 'wb') as f:
+                    f.write(response.content)
+                print('LINK ATTR {}'.format(link[atr]))
+                
+                # source_url = source_url.replace(link[atr], relative_path)
