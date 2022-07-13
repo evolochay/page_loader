@@ -21,12 +21,13 @@ URL_CSS = 'https://ru.hexlet.io/assets/application.css'
 URL_JS = 'https://ru.hexlet.io/packs/js/runtime.js'
 DIRECTORY = 'ru-hexlet-io_files'
 EXPECTED_HTML2 = 'ru-hexlet-io.html'
-EXPECTED_IMG = "ru-hexlet-io_files/professions-python.png"
-EXPECTED_CSS = "ru-hexlet-io_files/assets-application.css"
-EXPECTED_JS = "ru-hexlet-io_files/packs-js-runtime.js"
-
+EXPECTED_IMG = os.path.join(DIRECTORY, 'ru-hexlet-io-professions-python.png')
+EXPECTED_CSS = os.path.join(DIRECTORY, 'ru-hexlet-io-assets-application.css')
+EXPECTED_JS = os.path.join(DIRECTORY, 'ru-hexlet-io-packs-js-runtim.js')
+# РАЗОБРАТЬСЯ С CREATE_NAME func - образает последнюю букву в названии файла, когда расширение меньше 3
 
 def read_file(file_path, binary=False):
+    print(file_path)
     if not binary:
         with open(file_path, 'r') as f:
             return f.read()
@@ -49,7 +50,7 @@ def read_file(file_path, binary=False):
         (
             "https://pythonist.ru/chto-vy-znaete-o-list-dict-comprehensions.jpg/",
             "pythonist-ru-chto-vy-znaete-o-list-dict-comprehensions-",
-            "image"
+            "file"
         )
     ]
 )

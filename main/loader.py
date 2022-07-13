@@ -26,7 +26,7 @@ def create_html(soup, url, folder):
 def create_name(some_url, type):
     without_scheme = some_url[some_url.find('//') + 2:]
     get_extension = os.path.splitext(some_url)
-    if type == 'image':
+    if type == 'file':
         name = re.sub(r'[^a-zA-Z0-9]', '-',
                       without_scheme[:-4]) + get_extension[1]
     elif type == 'page':
@@ -72,23 +72,16 @@ def save_files(soup, dir_path, url):
     for teg, atr in resource_dict.items():
         all_links = soup.find_all(teg, attrs={atr: True})
         for link in all_links:
-            print("LINK {}".format(link))
             source_url = link[atr]
             source_domain_name = urlparse(source_url).netloc
-            print('SOURCE URL {}'.format(source_url))
-            print('SOURCE domain {}'.format(source_domain_name))
             if not source_domain_name or domain_name in source_domain_name:
                 if not source_domain_name:
                     source_url = urljoin(url, source_url)
-                
-                name = create_name(source_url, 'image')
+
+                name = create_name(source_url, 'file')
                 local_path = os.path.join(dir_path, name)
                 relative_path = ('/'+os.path.join(base_path_name, name))
-                print('relative_path {}'.format(relative_path))
                 response = requests.get(source_url)
                 link[atr] = relative_path
                 with open(local_path, 'wb') as f:
                     f.write(response.content)
-                print('LINK ATTR {}'.format(link[atr]))
-                
-                # source_url = source_url.replace(link[atr], relative_path)
