@@ -23,7 +23,7 @@ DIRECTORY = 'ru-hexlet-io_files'
 EXPECTED_HTML2 = 'ru-hexlet-io.html'
 EXPECTED_IMG = os.path.join(DIRECTORY, 'ru-hexlet-io-professions-python.png')
 EXPECTED_CSS = os.path.join(DIRECTORY, 'ru-hexlet-io-assets-application.css')
-EXPECTED_JS = os.path.join(DIRECTORY, 'ru-hexlet-io-packs-js-runtim.js')
+EXPECTED_JS = os.path.join(DIRECTORY, 'ru-hexlet-io-packs-js-runtime.js')
 # РАЗОБРАТЬСЯ С CREATE_NAME func - образает последнюю букву в названии файла, когда расширение меньше 3
 
 def read_file(file_path, binary=False):
@@ -35,7 +35,7 @@ def read_file(file_path, binary=False):
         return file.read()
 
 @pytest.mark.parametrize(
-    "test_case, expected, format",
+    "test_case, expected, ext",
     [
         (
             "https://ru.hexlet.io/teams",
@@ -45,17 +45,17 @@ def read_file(file_path, binary=False):
         (
             "https://ru.hexlet.io/courses",
             "ru-hexlet-io-courses_files",
-            "directory"
+            "dir"
         ),
         (
             "https://pythonist.ru/chto-vy-znaete-o-list-dict-comprehensions.jpg/",
-            "pythonist-ru-chto-vy-znaete-o-list-dict-comprehensions-",
-            "file"
+            "pythonist-ru-chto-vy-znaete-o-list-dict-comprehensions.jpg",
+            'file'
         )
     ]
 )
-def test_create_name(test_case, expected, format):
-    assert create_name(test_case, format) == expected
+def test_create_name(test_case, expected, ext):
+    assert create_name(test_case, ext) == expected
 
 
 def test_create_file_name():

@@ -2,7 +2,7 @@ import requests
 import re
 import os
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, urlunparse
 
 
 def download(destination_dir_name, page_adress):
@@ -15,7 +15,7 @@ def download(destination_dir_name, page_adress):
 
 
 def create_html(soup, url, folder):
-    html_name = create_name(url, 'page')
+    html_name = create_name(url, "page")
     page_path = os.path.join(folder+'/', html_name)
     if os.path.isdir(folder):
         with open(page_path, 'w') as new_file:
@@ -23,17 +23,33 @@ def create_html(soup, url, folder):
     return page_path
 
 
-def create_name(some_url, type):
-    without_scheme = some_url[some_url.find('//') + 2:]
-    get_extension = os.path.splitext(some_url)
-    if type == 'file':
-        name = re.sub(r'[^a-zA-Z0-9]', '-',
-                      without_scheme[:-4]) + get_extension[1]
-    elif type == 'page':
-        name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme) + '.html'
-    elif type == 'directory':
-        name = re.sub(r'[^a-zA-Z0-9]', '-', without_scheme) + '_files'
-    return name
+def clearing_url(url):
+    url_parse = urlparse(url)
+    url_netloc = url_parse.netloc
+    url_path = url_parse.path
+    clear_url = url_netloc + url_path
+    return clear_url
+
+
+def create_name(url, ext):
+    url_parts = list(urlparse(url))
+    url_parts[0] = ''
+    without_scheme = urlunparse(url_parts)
+    print("WITHOUT {}".format(without_scheme))
+    if without_scheme[-1] == '/':
+        without_scheme = without_scheme[:len(without_scheme)-1]
+    path_part, ending = os.path.splitext(without_scheme)
+
+    if ext == 'dir':
+        result = '-'.join(re.findall(r'\w+', path_part + ending)) + '_files'
+        print('RESULT DIR{}'.format(result))
+    elif ext == 'page':
+        result = '-'.join(re.findall(r'\w+', path_part + ending)) + '.html'
+        print('RESULT HTML{}'.format(result))
+    else:
+        result = '-'.join(re.findall(r'\w+', path_part)) + ending
+        print('RESULT FILE {}'.format(result))
+    return result
 
 
 def find_domen_name(url):
@@ -51,7 +67,7 @@ def download_image(image_url, image_name, dir_path):
 
 
 def create_dir(dir_name, page_adress):
-    resources_dir = create_name(page_adress, 'directory')
+    resources_dir = create_name(page_adress, "dir")
     files_dir_path = os.path.join(dir_name+'/', resources_dir)
     if not os.path.exists(files_dir_path):
         os.mkdir(files_dir_path)
