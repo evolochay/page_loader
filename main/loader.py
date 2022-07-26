@@ -35,20 +35,16 @@ def create_name(url, ext):
     url_parts = list(urlparse(url))
     url_parts[0] = ''
     without_scheme = urlunparse(url_parts)
-    print("WITHOUT {}".format(without_scheme))
     if without_scheme[-1] == '/':
         without_scheme = without_scheme[:len(without_scheme)-1]
     path_part, ending = os.path.splitext(without_scheme)
 
     if ext == 'dir':
         result = '-'.join(re.findall(r'\w+', path_part + ending)) + '_files'
-        print('RESULT DIR{}'.format(result))
     elif ext == 'page':
         result = '-'.join(re.findall(r'\w+', path_part + ending)) + '.html'
-        print('RESULT HTML{}'.format(result))
     else:
         result = '-'.join(re.findall(r'\w+', path_part)) + ending
-        print('RESULT FILE {}'.format(result))
     return result
 
 

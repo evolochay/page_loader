@@ -1,6 +1,10 @@
 import argparse
 import os
 from main.loader import download
+from logs.log_config import init_logger
+
+
+logger = init_logger('app')
 
 
 def make_parser():
