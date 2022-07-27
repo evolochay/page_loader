@@ -10,7 +10,8 @@ logger = logging.getLogger("app.repository")
 
 def download(destination_dir_name, page_adress):
     logger.info(f"requested url: {page_adress}")
-    logger.info(f"output path: {os.path.join(os.getcwd(), destination_dir_name)}")
+    logger.info(
+        f"output path:{os.path.join(os.getcwd(), destination_dir_name)}")
     dir_for_files = create_dir(destination_dir_name, page_adress)
     soup = create_soup(page_adress)
     save_files(soup, dir_for_files, page_adress)
