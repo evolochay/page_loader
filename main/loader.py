@@ -2,6 +2,7 @@ import logging
 import requests
 import re
 import os
+import sys
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse, urlunparse
 
@@ -59,15 +60,6 @@ def find_domen_name(url):
     return (full_adress.scheme+"://"+full_adress.netloc)
 
 
-def download_image(image_url, image_name, dir_path):
-    response = requests.get(image_url)
-    if response.ok:
-        full_path = os.path.join(dir_path+'/', image_name)
-        with open(full_path, 'wb') as f:
-            f.write(response.content)
-        return full_path
-
-
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, "dir")
     files_dir_path = os.path.join(dir_name+'/', resources_dir)
@@ -77,8 +69,7 @@ def create_dir(dir_name, page_adress):
 
 
 def create_soup(url):
-    print(url)
-    page_for_saving = requests.get(url)
+    page_for_saving = make_url_request(url)
     soup = BeautifulSoup(page_for_saving.text, 'html.parser')
     return soup
 
@@ -99,7 +90,21 @@ def save_files(soup, dir_path, url):
                 name = create_name(source_url, 'file')
                 local_path = os.path.join(dir_path, name)
                 relative_path = ('/'+os.path.join(base_path_name, name))
-                response = requests.get(source_url)
+                response = make_url_request(source_url)
                 link[atr] = relative_path
                 with open(local_path, 'wb') as f:
                     f.write(response.content)
+
+
+def make_url_request(url):
+    try:
+        response = requests.get(url)
+        if response.status_code != 200:
+            print(response.status_code)
+            logger.error("Problem with server`s response {}".format(url))
+            raise requests.exceptions.HTTPError
+        else:
+            return response
+    except requests.exceptions.RequestException as error:
+        logger.error("We`ve got {}".format(error))
+        raise sys.exit(1)
