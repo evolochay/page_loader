@@ -19,8 +19,8 @@ package-reinstall:
 
 
 make lint:
-	poetry run flake8 main
+	poetry run flake8 page_loader
 
 
 make test-coverage:
-	poetry run pytest --cov=main --cov-report xml tests/
+	poetry run pytest --cov=page_loader --cov-report xml tests/

@@ -1,6 +1,6 @@
 import argparse
 import os
-from main.loader import download
+from page_loader.loader import download
 from logs.log_config import init_logger
 
 

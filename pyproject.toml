@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["volochay <evgenia@volochay.info>"]
 packages = [
-  { include = "main" },
+  { include = "page_loader" },
 ]
 classifiers = [
     "Topic :: Education",
@@ -27,7 +27,7 @@ pytest = "^7.0.0"
 pytest-cov = "^3.0.0"
 
 [tool.poetry.scripts]
-loader = "main.scripts.loader:main"
+loader = "page_loader.scripts.loader:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
