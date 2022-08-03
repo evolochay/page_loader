@@ -92,8 +92,11 @@ def save_files(soup, dir_path, url):
                 relative_path = ('/'+os.path.join(base_path_name, name))
                 response = make_url_request(source_url)
                 link[atr] = relative_path
-                with open(local_path, 'wb') as f:
-                    f.write(response.content)
+                try:
+                    with open(local_path, 'wb') as f:
+                        f.write(response.content)
+                except IOError as error:
+                    logger.error("Access denied {}".format(error))
 
 
 def make_url_request(url):
@@ -101,7 +104,7 @@ def make_url_request(url):
         response = requests.get(url)
         if response.status_code != 200:
             print(response.status_code)
-            logger.error("Problem with server`s response {}".format(url))
+            logger.error("problem with server`s response {}".format(url))
             raise requests.exceptions.HTTPError
         else:
             return response

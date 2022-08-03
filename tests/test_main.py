@@ -1,9 +1,11 @@
+from cgitb import reset
 from tempfile import TemporaryDirectory
-from main.loader import download, create_name, find_domen_name
+from main.loader import download, create_name, find_domen_name, make_url_request
 import requests_mock
 import pytest
-from bs4 import BeautifulSoup
 import os
+import requests
+import sys
 
 
 URL_COURSES = 'https://ru.hexlet.io/courses'
@@ -24,7 +26,8 @@ EXPECTED_HTML2 = 'ru-hexlet-io.html'
 EXPECTED_IMG = os.path.join(DIRECTORY, 'ru-hexlet-io-professions-python.png')
 EXPECTED_CSS = os.path.join(DIRECTORY, 'ru-hexlet-io-assets-application.css')
 EXPECTED_JS = os.path.join(DIRECTORY, 'ru-hexlet-io-packs-js-runtime.js')
-# РАЗОБРАТЬСЯ С CREATE_NAME func - образает последнюю букву в названии файла, когда расширение меньше 3
+INVALID_URL = 'htps://ru.hexlet.io/courses'
+
 
 def read_file(file_path, binary=False):
     print(file_path)
@@ -100,3 +103,17 @@ def test_dowloads2():
 
 def test_find_domen_name():
     assert 'https://ru.hexlet.io' == find_domen_name(URL_COURSES)
+
+
+def test_make_url_request():
+    with requests_mock.Mocker() as m:
+        m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=200)
+        result = make_url_request(INVALID_URL).text
+        assert result == 'Just file for test'
+
+
+def test_make_url_request2():
+    with requests_mock.Mocker() as m:
+       m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
+       with pytest.raises(SystemExit):
+            make_url_request(INVALID_URL)
