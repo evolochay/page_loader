@@ -63,6 +63,7 @@ def find_domen_name(url):
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, "dir")
     files_dir_path = os.path.join(dir_name+'/', resources_dir)
+    print(files_dir_path)
     if not os.path.exists(files_dir_path):
         os.mkdir(files_dir_path)
     return files_dir_path
