@@ -111,4 +111,4 @@ def make_url_request(url):
             return response
     except requests.exceptions.RequestException as error:
         logger.error("We`ve got {}".format(error))
-        raise sys.exit(1)
+        raise sys.exit()
