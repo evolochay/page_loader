@@ -1,9 +1,11 @@
 from cgitb import reset
 from tempfile import TemporaryDirectory
+import tempfile
 from page_loader.loader import download, create_name, find_domen_name, make_url_request
 import requests_mock
 import pytest
 import os
+import requests
 
 
 URL_COURSES = 'https://ru.hexlet.io/courses'
@@ -115,3 +117,13 @@ def test_make_url_request():
 #       m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
 #       with pytest.raises(SystemExit):
 #            make_url_request(INVALID_URL)
+
+
+def test_connection_error(requests_mock):
+    invalid_url = 'https://badsite.com'
+    requests_mock.get(invalid_url, exc=requests.exceptions.ConnectionError)
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        assert not os.listdir(tmpdirname)
+        with pytest.raises(Exception):
+            assert download(invalid_url, tmpdirname)
+        assert not os.listdir(tmpdirname)

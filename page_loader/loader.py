@@ -20,6 +20,7 @@ def download(page_adress, destination_dir_name):
         file_full_path = create_html(soup, page_adress, destination_dir_name)
         return file_full_path
     except Exception:
+        os.rmdir(dir_for_files)
         raise
 
 
