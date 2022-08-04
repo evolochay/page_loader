@@ -18,9 +18,9 @@ def download(page_adress, destination_dir_name):
         soup = create_soup(page_adress)
         save_files(soup, dir_for_files, page_adress)
         file_full_path = create_html(soup, page_adress, destination_dir_name)
+        return file_full_path
     except Exception:
         raise
-    return file_full_path
 
 
 def create_html(soup, url, folder):
