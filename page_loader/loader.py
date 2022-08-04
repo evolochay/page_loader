@@ -5,6 +5,7 @@ import os
 # import sys
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse, urlunparse
+import shutil
 
 logger = logging.getLogger("app.repository")
 
@@ -20,7 +21,7 @@ def download(page_adress, destination_dir_name):
         file_full_path = create_html(soup, page_adress, destination_dir_name)
         return file_full_path
     except Exception:
-        os.rmdir(dir_for_files)
+        shutil.rmtree(dir_for_files)
         raise
 
 
