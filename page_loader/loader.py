@@ -2,7 +2,7 @@ import logging
 import requests
 import re
 import os
-import sys
+# import sys
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse, urlunparse
 
@@ -110,5 +110,5 @@ def make_url_request(url):
         else:
             return response
     except requests.exceptions.RequestException as error:
-        raise logger.error("We`ve got {}".format(error))
+        raise logger.error(error)
         # raise sys.exit()
