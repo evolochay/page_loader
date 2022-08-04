@@ -110,8 +110,8 @@ def test_make_url_request():
         assert result == 'Just file for test'
 
 
-def test_make_url_request2():
-    with requests_mock.Mocker() as m:
-       m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
-       with pytest.raises(SystemExit):
-            make_url_request(INVALID_URL)
+#def test_make_url_request2():
+#    with requests_mock.Mocker() as m:
+#       m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
+#       with pytest.raises(SystemExit):
+#            make_url_request(INVALID_URL)
