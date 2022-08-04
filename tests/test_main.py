@@ -76,7 +76,7 @@ def test_dowloads2():
         m.get(URL_IMG, content=image)
         m.get(URL_CSS, content=css)
         m.get(URL_JS, content=js)
-        result = download(tmpdir, URL)
+        result = download(URL, tmpdir)
         print(result)
 
         html_path = os.path.join(tmpdir, EXPECTED_HTML2)

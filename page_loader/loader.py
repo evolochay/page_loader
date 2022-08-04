@@ -9,7 +9,7 @@ from urllib.parse import urljoin, urlparse, urlunparse
 logger = logging.getLogger("app.repository")
 
 
-def download(destination_dir_name, page_adress):
+def download(page_adress, destination_dir_name):
     logger.info(f"requested url: {page_adress}")
     logger.info(
         f"output path:{os.path.join(os.getcwd(), destination_dir_name)}")

@@ -9,6 +9,7 @@ logger = init_logger('app')
 
 def make_parser():
     parser = argparse.ArgumentParser(description='Page loader')
+    parser.add_argument('page_adress', metavar='page_adress', type=str)
     parser.add_argument(
          '-o',
          '--output',
@@ -16,7 +17,6 @@ def make_parser():
          type=str,
          help='set output directory',
      )
-    parser.add_argument('page_adress', metavar='page_adress', type=str)
 
     return parser
 
@@ -25,7 +25,7 @@ def main():
     parser = make_parser()
     args = parser.parse_args()
 
-    downloaded_page = download(args.output, args.page_adress)
+    downloaded_page = download(args.page_adress, args.output)
     print(downloaded_page)
 
 
