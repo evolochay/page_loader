@@ -1,7 +1,8 @@
 from cgitb import reset
 from tempfile import TemporaryDirectory
 import tempfile
-from page_loader.loader import download, create_name, find_domen_name, make_url_request
+from page_loader.loader import download
+from page_loader.functions import create_name, find_domen_name, make_url_request
 import requests_mock
 import pytest
 import os
