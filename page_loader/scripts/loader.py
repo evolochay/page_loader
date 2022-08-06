@@ -28,14 +28,11 @@ def main():
     try:
         downloaded_page = download(args.page_adress, args.output)
         print(downloaded_page)
-    except Exception as e:
-        if 'page_adress' in str(e.args):
-            print('Check URL')
-            sys.exit(1)
-        elif 'Permission denied' in str(e.args):
-            print('Permission denied to the specified directory')
-            sys.exit(2)
-    sys.exit(0)
+        sys.exit(0)
+    except Exception:
+        sys.exit(1)
+    except FileExistsError:
+        sys.exit(2)
 
 
 if __name__ == '__main__':
