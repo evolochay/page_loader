@@ -88,14 +88,16 @@ def save_files(soup, dir_path, url):
 
 
 def make_url_request(url):
+    logger.info('Here is URL {}'.format(url))
     try:
         response = requests.get(url)
+        logger.info('URL status code = {}'.format(response.status_code))
         if response.status_code != 200:
             print(response.status_code)
             logger.error("problem with server`s response {}".format(url))
             raise requests.exceptions.HTTPError
         else:
             return response
-    except requests.exceptions.RequestException as error:
+    except Exception as error:  # requests.exceptions.RequestException as e:
         raise logger.error(error)
         # raise sys.exit()
