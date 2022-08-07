@@ -71,10 +71,9 @@ def save_files(soup, dir_path, url):
         for link in all_links:
             source_url = link[atr]
             source_domain_name = urlparse(source_url).netloc
-            if not source_domain_name or domain_name in source_domain_name:
-                if not source_domain_name:
+            if source_domain_name == domain_name or source_domain_name == '':
+                if source_domain_name == '':
                     source_url = urljoin(url, source_url)
-
                 name = create_name(source_url, 'file')
                 local_path = os.path.join(dir_path, name)
                 relative_path = ('/'+os.path.join(base_path_name, name))
@@ -91,9 +90,7 @@ def make_url_request(url):
     logger.info('Here is URL {}'.format(url))
     try:
         response = requests.get(url)
-        logger.info('URL status code = {}'.format(response.status_code))
         if response.status_code != 200:
-            print(response.status_code)
             logger.error("problem with server`s response {}".format(url))
             raise requests.exceptions.HTTPError
         else:
