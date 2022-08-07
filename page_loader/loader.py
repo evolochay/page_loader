@@ -9,10 +9,10 @@ def download(page_adress, destination_dir_name):
     logger.info(
         f"output path:{os.path.join(os.getcwd(), destination_dir_name)}")
     try:
-        dir_for_files = create_dir(destination_dir_name, page_adress)
         soup = create_soup(page_adress)
-        save_files(soup, dir_for_files, page_adress)
         file_full_path = create_html(soup, page_adress, destination_dir_name)
+        dir_for_files = create_dir(destination_dir_name, page_adress)
+        save_files(soup, dir_for_files, page_adress)
         return file_full_path
     except Exception:
         shutil.rmtree(dir_for_files)
