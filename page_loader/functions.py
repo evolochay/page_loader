@@ -76,7 +76,7 @@ def save_files(soup, dir_path, url):
                     source_url = urljoin(url, source_url)
                 name = create_name(source_url, 'file')
                 local_path = os.path.join(dir_path, name)
-                relative_path = ('/'+'/'+os.path.join(base_path_name, name))
+                relative_path = (os.path.join(base_path_name, name))
                 print("RELATIVE : {}".format(relative_path))
                 response = make_url_request(source_url)
                 link[atr] = relative_path
