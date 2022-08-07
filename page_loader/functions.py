@@ -9,6 +9,7 @@ logger = logging.getLogger("app.repository")
 
 
 def create_html(soup, url, folder):
+    logger.info('Making a HTML-page from {}'.format(url))
     html_name = create_name(url, "page")
     page_path = os.path.join(folder+'/', html_name)
     if os.path.isdir(folder):
