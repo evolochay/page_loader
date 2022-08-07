@@ -101,3 +101,9 @@ def make_url_request(url):
     except Exception as error:  # requests.exceptions.RequestException as e:
         raise logger.error(error)
         # raise sys.exit()
+    except (requests.exceptions.InvalidURL,
+            requests.exceptions.InvalidSchema,
+            requests.exceptions.MissingSchema):
+        message = f'Неверый адрес страницы {url}, ресурс не скачан.'
+        logger.debug(message)
+        raise
