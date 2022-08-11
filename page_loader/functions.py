@@ -41,7 +41,7 @@ def create_name(url, ext):
         result = '-'.join(re.findall(r'\w+', path_part + ending)) + '_files'
     elif ext == 'page':
         result = '-'.join(re.findall(r'\w+', path_part + ending)) + '.html'
-    else:
+    elif ext == 'file':
         result = '-'.join(re.findall(r'\w+', path_part)) + ending
     return result
 
