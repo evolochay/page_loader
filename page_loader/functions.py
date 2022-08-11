@@ -9,6 +9,7 @@ logger = logging.getLogger("app.repository")
 
 
 def download_page(url, path):
+    logger.info('download html page: {}'.format(url))
     html_name = create_name(url, 'page')
     new_html = make_path(path, html_name)
     content = make_url_request(url)

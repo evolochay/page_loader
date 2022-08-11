@@ -17,3 +17,5 @@ def download(page_url, destination_dir_name):
     except Exception:
         shutil.rmtree(dir_for_files)
         raise
+    except FileExistsError:
+        raise
