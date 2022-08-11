@@ -38,8 +38,7 @@ def create_name(url, ext):
         without_scheme = without_scheme[:len(without_scheme)-1]
     path_part, ending = os.path.splitext(without_scheme)
     logger.info('Ending {}'.format(ending))
-    if ending == '':
-        result = '-'.join(re.findall(r'\w+', path_part)) + ending
+
     if ext == 'dir':
         result = '-'.join(re.findall(r'\w+', path_part + ending)) + '_files'
     elif ext == 'page' or ending == '':
@@ -97,8 +96,8 @@ def loading_res(res_description, output_path):
     source = res_description['source']
     rel_path = make_path(output_path, res_description['rel_path'])
     if tag == 'img':
-        data = make_url_request(source, bytes=True)
-        writing(rel_path, data, bytes=True)
+        data = make_url_request(source) # , bytes=True)
+        writing(rel_path, data) #, bytes=True)
     elif tag == 'link' or tag == 'script':
         data = make_url_request(source)
         writing(rel_path, data)
