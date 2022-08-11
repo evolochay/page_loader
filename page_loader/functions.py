@@ -75,6 +75,7 @@ def save_files(page_path, dir_path, url):
                     if source_dn == '':
                         source_url = urljoin(url, source_url)
                     name = create_name(source_url, 'file')
+                    logger.debug('File name: {}'.format(name))
                     relative_path = make_path(base_path_name, name)
                     res_description = dict([('tag', tag),
                                             ('source', source_url),
