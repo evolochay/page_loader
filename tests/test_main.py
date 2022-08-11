@@ -2,7 +2,7 @@ from cgitb import reset
 from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.loader import download
-from page_loader.functions import create_name, find_domen_name, make_url_request
+from page_loader.functions import create_name, make_url_request
 import requests_mock
 import pytest
 import os
@@ -102,14 +102,10 @@ def test_dowloads2():
         assert len(result) > 0
 
 
-def test_find_domen_name():
-    assert 'https://ru.hexlet.io' == find_domen_name(URL_COURSES)
-
-
 def test_make_url_request():
     with requests_mock.Mocker() as m:
         m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=200)
-        result = make_url_request(INVALID_URL).text
+        result = make_url_request(INVALID_URL)
         assert result == 'Just file for test'
 
 

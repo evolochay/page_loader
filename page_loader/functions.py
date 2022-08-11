@@ -8,22 +8,25 @@ import logging
 logger = logging.getLogger("app.repository")
 
 
-def create_html(soup, url, folder):
-    logger.info('Making a HTML-page from {}'.format(url))
-    html_name = create_name(url, "page")
-    page_path = os.path.join(folder+'/', html_name)
-    if os.path.isdir(folder):
-        with open(page_path, 'w') as new_file:
-            new_file.write(soup.prettify())
-    return page_path
+def download_page(url, path):
+    html_name = create_name(url, 'page')
+    new_html = make_path(path, html_name)
+    content = make_url_request(url)
+    writing(new_html, content)
+    return new_html
 
 
-def clearing_url(url):
-    url_parse = urlparse(url)
-    url_netloc = url_parse.netloc
-    url_path = url_parse.path
-    clear_url = url_netloc + url_path
-    return clear_url
+def writing(file, data, bytes=False):
+    if bytes is True:
+        tag = 'wb'
+    else:
+        tag = 'w'
+    with open(file, tag) as f:
+        f.write(data)
+
+
+def make_path(path, file_name):
+    return os.path.join(path, file_name)
 
 
 def create_name(url, ext):
@@ -43,11 +46,6 @@ def create_name(url, ext):
     return result
 
 
-def find_domen_name(url):
-    full_adress = urlparse(url)
-    return (full_adress.scheme+"://"+full_adress.netloc)
-
-
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, "dir")
     files_dir_path = os.path.join(dir_name+'/', resources_dir)
@@ -57,38 +55,52 @@ def create_dir(dir_name, page_adress):
     return files_dir_path
 
 
-def create_soup(url):
-    page_for_saving = make_url_request(url)
-    soup = BeautifulSoup(page_for_saving.text, 'html.parser')
-    return soup
-
-
-def save_files(soup, dir_path, url):
+def save_files(page_path, dir_path, url):
     base_path_name = os.path.basename(dir_path)
     domain_name = urlparse(url).netloc
     resource_dict = {'img': 'src', 'link': 'href', 'script': 'src'}
-    for teg, atr in resource_dict.items():
-        all_links = soup.find_all(teg, attrs={atr: True})
-        for link in all_links:
-            source_url = link[atr]
-            source_domain_name = urlparse(source_url).netloc
-            if source_domain_name == domain_name or source_domain_name == '':
-                if source_domain_name == '':
-                    source_url = urljoin(url, source_url)
-                name = create_name(source_url, 'file')
-                local_path = os.path.join(dir_path, name)
-                relative_path = (os.path.join(base_path_name, name))
-                print("RELATIVE : {}".format(relative_path))
-                response = make_url_request(source_url)
-                link[atr] = relative_path
-                try:
-                    with open(local_path, 'wb') as f:
-                        f.write(response.content)
-                except IOError as error:
-                    logger.error("Access denied {}".format(error))
+    result_list = []
+    with open(page_path, 'r', encoding='utf-8') as hp:
+        soup = BeautifulSoup(hp.read(), 'html.parser')
+
+        for tag, atr in resource_dict.items():
+            all_links = soup.find_all(tag, attrs={atr: True})
+            for link in all_links:
+                source_url = link[atr]
+                source_dn = urlparse(source_url).netloc
+                if source_dn == domain_name or source_dn == '':
+                    if source_dn == '':
+                        source_url = urljoin(url, source_url)
+                    name = create_name(source_url, 'file')
+                    relative_path = make_path(base_path_name, name)
+                    res_description = dict([('tag', tag),
+                                            ('source', source_url),
+                                            ('rel_path', relative_path)])
+                    result_list.append(res_description)
+                    link[atr] = relative_path
+    with open(page_path, 'w') as f:
+        f.write(soup.prettify())
+    return result_list
 
 
-def make_url_request(url):
+def download_content(resources_dict, output_path):
+    for res in resources_dict:
+        loading_res(res, output_path)
+
+
+def loading_res(res_description, output_path):
+    tag = res_description['tag']
+    source = res_description['source']
+    rel_path = make_path(output_path, res_description['rel_path'])
+    if tag == 'img':
+        data = make_url_request(source, bytes=True)
+        writing(rel_path, data, bytes=True)
+    elif tag == 'link' or tag == 'script':
+        data = make_url_request(source)
+        writing(rel_path, data)
+
+
+def make_url_request(url, bytes=False):
     logger.info('Here is URL {}'.format(url))
     try:
         response = requests.get(url)
@@ -96,13 +108,11 @@ def make_url_request(url):
             logger.error("problem with server`s response {}".format(url))
             raise requests.exceptions.HTTPError
         else:
-            return response
+            if bytes is True:
+                result = response.content
+            else:
+                result = response.text
+            return result
     except Exception as error:  # requests.exceptions.RequestException as e:
         raise logger.error(error)
         # raise sys.exit()
-    except (requests.exceptions.InvalidURL,
-            requests.exceptions.InvalidSchema,
-            requests.exceptions.MissingSchema):
-        message = f'Неверый адрес страницы {url}, ресурс не скачан.'
-        logger.debug(message)
-        raise
