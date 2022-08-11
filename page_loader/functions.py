@@ -37,11 +37,13 @@ def create_name(url, ext):
         without_scheme = without_scheme[:len(without_scheme)-1]
     path_part, ending = os.path.splitext(without_scheme)
     logger.info('Ending {}'.format(ending))
+    if ending == '':
+        result = '-'.join(re.findall(r'\w+', path_part)) + ending
     if ext == 'dir':
         result = '-'.join(re.findall(r'\w+', path_part + ending)) + '_files'
     elif ext == 'page':
         result = '-'.join(re.findall(r'\w+', path_part + ending)) + '.html'
-    elif ext == 'file':
+    else:
         result = '-'.join(re.findall(r'\w+', path_part)) + ending
     return result
 
