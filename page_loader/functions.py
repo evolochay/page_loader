@@ -17,7 +17,7 @@ def download_page(url, path):
     return new_html
 
 
-def writing(file, data, bytes=False):
+def writing(file, data, bytes=True):
     if bytes is True:
         tag = 'wb'
     else:
@@ -96,8 +96,8 @@ def loading_res(res_description, output_path):
     source = res_description['source']
     rel_path = make_path(output_path, res_description['rel_path'])
     if tag == 'img':
-        data = make_url_request(source) # , bytes=True)
-        writing(rel_path, data) #, bytes=True)
+        data = make_url_request(source, bytes=True)
+        writing(rel_path, data, bytes=True)
     elif tag == 'link' or tag == 'script':
         data = make_url_request(source)
         writing(rel_path, data)
