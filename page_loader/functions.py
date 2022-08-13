@@ -17,7 +17,7 @@ def download_page(url, path):
     return new_html
 
 
-def writing(file, data, bytes=True):
+def writing(file, data, bytes=False):
     if bytes is True:
         tag = 'wb'
     else:
@@ -99,8 +99,8 @@ def loading_res(res_description, output_path):
         data = make_url_request(source, bytes=True)
         writing(rel_path, data, bytes=True)
     elif tag == 'link' or tag == 'script':
-        data = make_url_request(source)
-        writing(rel_path, data)
+        data = make_url_request(source, bytes=True)
+        writing(rel_path, data, bytes=True)
 
 
 def make_url_request(url, bytes=False):
