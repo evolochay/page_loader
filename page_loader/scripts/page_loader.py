@@ -1,7 +1,7 @@
 import argparse
 import os
 import sys
-from page_loader.loader import download
+from page_loader.page_loader import download
 from logs.log_config import init_logger
 import requests
 
