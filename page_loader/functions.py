@@ -103,7 +103,7 @@ def make_url_request(url, bytes=False):
     try:
         response = requests.get(url)
         if response.status_code != 200:
-            logger.error("problem with server`s response {}".format(url))
+            logger.warning("problem with server`s response {}".format(url))
             raise requests.exceptions.HTTPError
         else:
             if bytes is True:
