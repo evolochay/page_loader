@@ -1,4 +1,3 @@
-from cgitb import reset
 from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.page_loader import download
@@ -37,6 +36,7 @@ def read_file(file_path, binary=False):
             return f.read()
     with open(file_path, 'rb') as file:
         return file.read()
+
 
 @pytest.mark.parametrize(
     "test_case, expected, ext",
@@ -107,13 +107,6 @@ def test_make_url_request():
         m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=200)
         result = make_url_request(INVALID_URL)
         assert result == 'Just file for test'
-
-
-#def test_make_url_request2():
-#    with requests_mock.Mocker() as m:
-#       m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
-#       with pytest.raises(SystemExit):
-#            make_url_request(INVALID_URL)
 
 
 def test_connection_error(requests_mock):

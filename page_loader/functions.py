@@ -35,7 +35,7 @@ def create_name(url, ext):
     url_parts[0] = ''
     without_scheme = urlunparse(url_parts)
     if without_scheme[-1] == '/':
-        without_scheme = without_scheme[:len(without_scheme)-1]
+        without_scheme = without_scheme[:len(without_scheme) - 1]
     path_part, ending = os.path.splitext(without_scheme)
 
     if ext == 'dir':
@@ -49,7 +49,7 @@ def create_name(url, ext):
 
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, "dir")
-    files_dir_path = os.path.join(dir_name+'/', resources_dir)
+    files_dir_path = os.path.join(dir_name + '/', resources_dir)
     print(files_dir_path)
     if not os.path.exists(files_dir_path):
         os.mkdir(files_dir_path)
@@ -73,6 +73,7 @@ def save_files(page_path, dir_path, url):
                     if source_dn == '':
                         source_url = urljoin(url, source_url)
                     name = create_name(source_url, 'file')
+                    logger.debug('File name: {}'.format(name))
                     relative_path = make_path(base_path_name, name)
                     res_description = dict([('tag', tag),
                                             ('source', source_url),
@@ -110,5 +111,5 @@ def make_url_request(url, bytes=False):
                 result = response.text
             return result
     except Exception as error:  # requests.exceptions.RequestException as e:
-        raise logger.warning(error)
+        raise logger.error(error)
         # raise sys.exit()

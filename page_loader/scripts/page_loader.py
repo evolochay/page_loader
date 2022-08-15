@@ -13,12 +13,12 @@ def make_parser():
     parser = argparse.ArgumentParser(description='Page loader')
     parser.add_argument('page_adress', metavar='page_adress', type=str)
     parser.add_argument(
-         '-o',
-         '--output',
-         default=os.getcwd(),
-         type=str,
-         help='set output directory',
-     )
+        '-o',
+        '--output',
+        default=os.getcwd(),
+        type=str,
+        help='set output directory',
+    )
 
     return parser
 
