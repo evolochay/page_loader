@@ -15,8 +15,8 @@ def download(page_url, destination_dir_name):
         download_content(content, destination_dir_name)
         logger.debug('Here is final PATH {}'.format(page_path))
         return page_path
+    except FileExistsError:
+        raise
     except Exception:
         shutil.rmtree(dir_for_files)
-        raise
-    except FileExistsError:
         raise

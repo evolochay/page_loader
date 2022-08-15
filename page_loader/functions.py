@@ -92,15 +92,10 @@ def download_content(resources_dict, output_path):
 
 
 def loading_res(res_description, output_path):
-    tag = res_description['tag']
     source = res_description['source']
     rel_path = make_path(output_path, res_description['rel_path'])
-    if tag == 'img':
-        data = make_url_request(source, bytes=True)
-        writing(rel_path, data, bytes=True)
-    elif tag == 'link' or tag == 'script':
-        data = make_url_request(source, bytes=True)
-        writing(rel_path, data, bytes=True)
+    data = make_url_request(source, bytes=True)
+    writing(rel_path, data, bytes=True)
 
 
 def make_url_request(url, bytes=False):
