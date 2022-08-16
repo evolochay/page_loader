@@ -51,7 +51,6 @@ def create_name(url, ext):
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, "dir")
     files_dir_path = os.path.join(dir_name + '/', resources_dir)
-    print(files_dir_path)
     if not os.path.exists(files_dir_path):
         os.mkdir(files_dir_path)
     return files_dir_path
@@ -74,7 +73,7 @@ def save_files(page_path, dir_path, url):
                     if source_dn == '':
                         source_url = urljoin(url, source_url)
                     name = create_name(source_url, 'file')
-                    logger.debug('File name: {}'.format(name))
+                    logger.info('File name: {}'.format(name))
                     relative_path = make_path(base_path_name, name)
                     res_description = dict([('tag', tag),
                                             ('source', source_url),

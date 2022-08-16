@@ -7,7 +7,7 @@ build:
 
 
 page-loader:
-	poetry run loader
+	poetry run page-loader
 
 
 package-install:
