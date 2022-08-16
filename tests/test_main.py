@@ -67,7 +67,7 @@ def test_create_file_name():
     assert result == EXPECTED_FILE_NAME
 
 
-def test_dowloads2():
+def test_dowloads():
     html_raw = read_file(RAW)
     html_expected = read_file(HTML)
     image = read_file(IMG, binary=True)

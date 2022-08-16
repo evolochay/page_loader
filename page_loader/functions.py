@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse, urlunparse
 import os
 import logging
+from progress.bar import Bar
 
 logger = logging.getLogger("app.repository")
 
@@ -86,8 +87,11 @@ def save_files(page_path, dir_path, url):
 
 
 def download_content(resources_dict, output_path):
-    for res in resources_dict:
-        loading_res(res, output_path)
+    count = len(resources_dict)
+    with Bar('Processing', max=count) as bar:
+        for res in resources_dict:
+            loading_res(res, output_path)
+            bar.next()
 
 
 def loading_res(res_description, output_path):
