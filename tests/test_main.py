@@ -2,6 +2,7 @@ from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.page_loader import download
 from page_loader.functions import create_name, make_url_request, writing, download_page
+from page_loader.functions import make_path
 import requests_mock
 import pytest
 import os
@@ -132,3 +133,10 @@ def test_download_page2(wrong_url):
     with tempfile.TemporaryDirectory() as d:
         with pytest.raises(Exception):
             download_page(wrong_url, d)
+
+
+def test_make_path():
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        file_name = 'file_test_name'
+        result = os.path.join(tmpdirname, file_name)
+        assert make_path(tmpdirname, file_name) == result
