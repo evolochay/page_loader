@@ -1,7 +1,7 @@
 from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.page_loader import download
-from page_loader.functions import create_name, make_url_request
+from page_loader.functions import create_name, make_url_request, writing, download_page
 import requests_mock
 import pytest
 import os
@@ -11,10 +11,9 @@ import requests
 URL_COURSES = 'https://ru.hexlet.io/courses'
 URL_Q = "https://quotes.toscrape.com"
 EXPECTED_FILE_NAME = 'ru-hexlet-io-courses.html'
-EXPECTED_HTML = 'tests/fixtures/expected.html'
 RAW = 'tests/fixtures/raw.html'
 IMG = 'tests/fixtures/image.png'
-HTML = 'tests/fixtures/expected2.html'
+HTML = 'tests/fixtures/expected.html'
 URL = 'https://ru.hexlet.io'
 CSS = 'tests/fixtures/css_file.css'
 JS = 'tests/fixtures/js_file.js'
@@ -22,7 +21,7 @@ URL_IMG = 'https://ru.hexlet.io/professions/python.png'
 URL_CSS = 'https://ru.hexlet.io/assets/application.css'
 URL_JS = 'https://ru.hexlet.io/packs/js/runtime.js'
 DIRECTORY = 'ru-hexlet-io_files'
-EXPECTED_HTML2 = 'ru-hexlet-io.html'
+EXPECTED_HTML = 'ru-hexlet-io.html'
 EXPECTED_IMG = os.path.join(DIRECTORY, 'ru-hexlet-io-professions-python.png')
 EXPECTED_CSS = os.path.join(DIRECTORY, 'ru-hexlet-io-assets-application.css')
 EXPECTED_JS = os.path.join(DIRECTORY, 'ru-hexlet-io-packs-js-runtime.js')
@@ -82,7 +81,7 @@ def test_dowloads():
         result = download(URL, tmpdir)
         print(result)
 
-        html_path = os.path.join(tmpdir, EXPECTED_HTML2)
+        html_path = os.path.join(tmpdir, EXPECTED_HTML)
         img_path = os.path.join(tmpdir, EXPECTED_IMG)
         css_path = os.path.join(tmpdir, EXPECTED_CSS)
         js_path = os.path.join(tmpdir, EXPECTED_JS)
@@ -117,3 +116,19 @@ def test_connection_error(requests_mock):
         with pytest.raises(Exception):
             assert download(invalid_url, tmpdirname)
         assert not os.listdir(tmpdirname)
+
+
+def test_writing_text():
+    data = 'hello'
+    with tempfile.TemporaryDirectory() as d:
+        path_file = os.path.join(d, 'new_file.html')
+        writing(path_file, data)
+        with open(path_file, 'r') as f:
+            assert data == f.read()
+
+
+@pytest.mark.parametrize('wrong_url', INVALID_URL)
+def test_download_page2(wrong_url):
+    with tempfile.TemporaryDirectory() as d:
+        with pytest.raises(Exception):
+            download_page(wrong_url, d)
