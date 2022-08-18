@@ -3,7 +3,7 @@ import os
 import sys
 from page_loader.page_loader import download
 from logs.log_config import init_logger
-import requests
+from requests import (HTTPError, ConnectionError, Timeout)
 
 
 logger = init_logger('app')
@@ -29,33 +29,12 @@ def main():
     try:
         downloaded_page = download(args.page_adress, args.output)
         print(downloaded_page)
-
-    except FileNotFoundError as fnfe:
-        print(fnfe)
-        sys.exit(1)
-
-    except PermissionError as pe:
-        print(pe)
-        sys.exit(1)
-
-    except NotADirectoryError as nade:
-        print(nade)
-        sys.exit(1)
-
-    except requests.exceptions.ConnectionError:
-        print(f'Unable to connect to {args.page_adress}')
-        sys.exit(1)
-
-    except ConnectionAbortedError as cae:
-        print(cae)
-        sys.exit(1)
-
-    except FileExistsError as fee:
-        print(fee)
-        sys.exit(1)
-
-    except Exception as e:
-        print(e)
+    except (ConnectionError,
+            HTTPError,
+            OSError,
+            PermissionError,
+            Timeout,
+            ):
         sys.exit(1)
 
     else:

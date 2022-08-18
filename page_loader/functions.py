@@ -9,11 +9,29 @@ from progress.bar import Bar
 logger = logging.getLogger("app.repository")
 
 
-def download_page(url, path):
+def make_url_request(url, bytes=False):
+    logger.info('Here is URL {}'.format(url))
+    try:
+        response = requests.get(url)
+        if response.status_code != 200:
+            logger.warning("problem with server`s response {}".format(url))
+            raise requests.exceptions.HTTPError
+        else:
+            if bytes is True:
+                result = response.content
+            else:
+                result = response.text
+            return result
+    except requests.exceptions.RequestException as e:
+        raise logger.error(e)
+        # raise sys.exit()
+
+
+def download_page(url, path, get_content=make_url_request):
     logger.info('download html page: {}'.format(url))
     html_name = create_name(url, 'page')
     new_html = make_path(path, html_name)
-    content = make_url_request(url)
+    content = get_content(url)
     writing(new_html, content)
     return new_html
 
@@ -49,6 +67,7 @@ def create_name(url, ext):
 
 
 def create_dir(dir_name, page_adress):
+    print("IM HERE")
     resources_dir = create_name(page_adress, "dir")
     files_dir_path = make_path(dir_name, resources_dir)
     if not os.path.exists(files_dir_path):
@@ -100,19 +119,11 @@ def loading_res(res_description, output_path):
     writing(rel_path, data, bytes=True)
 
 
-def make_url_request(url, bytes=False):
-    logger.info('Here is URL {}'.format(url))
+def dir_validation(dir_path):
     try:
-        response = requests.get(url)
-        if response.status_code != 200:
-            logger.warning("problem with server`s response {}".format(url))
-            raise requests.exceptions.HTTPError
-        else:
-            if bytes is True:
-                result = response.content
-            else:
-                result = response.text
-            return result
-    except Exception as error:  # requests.exceptions.RequestException as e:
-        raise logger.error(error)
-        # raise sys.exit()
+        if not os.access(dir_path, os.R_OK & os.W_OK & os.X_OK):
+            logger.error("You may not use this directory")
+        return dir_path
+    except (FileNotFoundError, FileExistsError) as e:
+        logger.error(e)
+        raise Exception

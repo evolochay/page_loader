@@ -2,7 +2,7 @@ from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.page_loader import download
 from page_loader.functions import create_name, make_url_request, writing, download_page
-from page_loader.functions import make_path
+from page_loader.functions import make_path, dir_validation
 import requests_mock
 import pytest
 import os
@@ -140,3 +140,15 @@ def test_make_path():
         file_name = 'file_test_name'
         result = os.path.join(tmpdirname, file_name)
         assert make_path(tmpdirname, file_name) == result
+
+
+def fake_data(*args):
+    return 'hello'
+
+
+def test_download_page1():
+    with tempfile.TemporaryDirectory() as d:
+        path_file = os.path.join(d, EXPECTED_FILE_NAME)
+        new_html = download_page(URL_COURSES, d, get_content=fake_data)
+        assert os.path.exists(new_html)
+        assert new_html == path_file
