@@ -72,9 +72,13 @@ def create_name(url, ext):
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, "dir")
     files_dir_path = make_path(dir_name, resources_dir)
-    if not os.path.exists(files_dir_path):
+    try:
         os.mkdir(files_dir_path)
-    return files_dir_path
+        return files_dir_path
+    except FileExistsError as e:
+        logger.error('File exist error:'
+                     f'{(e)}')
+        raise
 
 
 def save_files(page_path, dir_path, url):

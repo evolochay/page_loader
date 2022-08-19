@@ -2,7 +2,7 @@ from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.page_loader import download
 from page_loader.functions import create_name, make_url_request, writing, download_page
-from page_loader.functions import make_path
+from page_loader.functions import make_path, create_dir
 import requests_mock
 import pytest
 import os
@@ -60,11 +60,6 @@ def read_file(file_path, binary=False):
 )
 def test_create_name(test_case, expected, ext):
     assert create_name(test_case, ext) == expected
-
-
-def test_create_file_name():
-    result = create_name(URL_COURSES, 'page')
-    assert result == EXPECTED_FILE_NAME
 
 
 def test_dowloads():
@@ -152,3 +147,9 @@ def test_download_page1():
         new_html = download_page(URL_COURSES, d, get_content=fake_data)
         assert os.path.exists(new_html)
         assert new_html == path_file
+
+
+def test_create_dir():
+    with tempfile.TemporaryDirectory() as d:
+        dir = create_dir(d, URL_COURSES)
+        assert os.path.exists(dir)

@@ -30,4 +30,4 @@ You can use this tool for save any static HTML-page and it`s content.
 [![GitHub Actions Demo](https://github.com/foxy-chay/python-project-lvl3/actions/workflows/github-actions-demo.yml/badge.svg)](https://github.com/foxy-chay/python-project-lvl3/actions/workflows/github-actions-demo.yml)
 
 ### Asciinema
-https://asciinema.org/a/2Od0UXc2WipdziPulTSwZ8xFl
+[![asciicast](https://asciinema.org/a/2Od0UXc2WipdziPulTSwZ8xFl.svg)](https://asciinema.org/a/2Od0UXc2WipdziPulTSwZ8xFl)
