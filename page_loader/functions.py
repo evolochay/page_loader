@@ -17,14 +17,17 @@ def make_url_request(url, bytes=False):
             logger.warning("problem with server`s response {}".format(url))
             raise requests.exceptions.HTTPError
         else:
-            if bytes is True:
-                result = response.content
-            else:
-                result = response.text
-            return result
+            return check_bytes(response, bytes)
     except requests.exceptions.RequestException as e:
         raise logger.error(e)
         # raise sys.exit()
+
+
+def check_bytes(response, bytes):
+    if bytes is True:
+        return response.content
+    else:
+        return response.text
 
 
 def download_page(url, path, get_content=make_url_request):
@@ -67,7 +70,6 @@ def create_name(url, ext):
 
 
 def create_dir(dir_name, page_adress):
-    print("IM HERE")
     resources_dir = create_name(page_adress, "dir")
     files_dir_path = make_path(dir_name, resources_dir)
     if not os.path.exists(files_dir_path):

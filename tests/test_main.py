@@ -2,7 +2,7 @@ from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.page_loader import download
 from page_loader.functions import create_name, make_url_request, writing, download_page
-from page_loader.functions import make_path, dir_validation
+from page_loader.functions import make_path
 import requests_mock
 import pytest
 import os
