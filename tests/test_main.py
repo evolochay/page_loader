@@ -29,6 +29,13 @@ EXPECTED_JS = os.path.join(DIRECTORY, 'ru-hexlet-io-packs-js-runtime.js')
 INVALID_URL = 'htps://ru.hexlet.io/courses'
 
 
+def test_directory_doesnt_exist():
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        nonexistent_directory = os.path.join(tmpdirname, 'something')
+        with pytest.raises(UnboundLocalError):
+            download(URL_COURSES, nonexistent_directory)
+
+
 def read_file(file_path, binary=False):
     print(file_path)
     if not binary:
@@ -75,7 +82,6 @@ def test_dowloads():
         m.get(URL_CSS, content=css)
         m.get(URL_JS, content=js)
         result = download(URL, tmpdir)
-        print(result)
 
         html_path = os.path.join(tmpdir, EXPECTED_HTML)
         img_path = os.path.join(tmpdir, EXPECTED_IMG)

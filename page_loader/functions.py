@@ -81,6 +81,27 @@ def create_dir(dir_name, page_adress):
         raise
 
 
+def find_files(resource_dict, soup, domain_name, url, base_path_name):
+    result_list = []
+    for tag, atr in resource_dict.items():
+        all_links = soup.find_all(tag, attrs={atr: True})
+        for link in all_links:
+            source_url = link[atr]
+            source_dn = urlparse(source_url).netloc
+            if source_dn == domain_name or source_dn == '':
+                if source_dn == '':
+                    source_url = urljoin(url, source_url)
+                name = create_name(source_url, 'file')
+                logger.info('File name: {}'.format(name))
+                relative_path = make_path(base_path_name, name)
+                res_description = dict([('tag', tag),
+                                        ('source', source_url),
+                                        ('rel_path', relative_path)])
+                result_list.append(res_description)
+                link[atr] = relative_path
+    return result_list
+
+
 def save_files(page_path, dir_path, url):
     base_path_name = os.path.basename(dir_path)
     domain_name = urlparse(url).netloc
@@ -88,23 +109,8 @@ def save_files(page_path, dir_path, url):
     result_list = []
     with open(page_path, 'r', encoding='utf-8') as hp:
         soup = BeautifulSoup(hp.read(), 'html.parser')
-
-        for tag, atr in resource_dict.items():
-            all_links = soup.find_all(tag, attrs={atr: True})
-            for link in all_links:
-                source_url = link[atr]
-                source_dn = urlparse(source_url).netloc
-                if source_dn == domain_name or source_dn == '':
-                    if source_dn == '':
-                        source_url = urljoin(url, source_url)
-                    name = create_name(source_url, 'file')
-                    logger.info('File name: {}'.format(name))
-                    relative_path = make_path(base_path_name, name)
-                    res_description = dict([('tag', tag),
-                                            ('source', source_url),
-                                            ('rel_path', relative_path)])
-                    result_list.append(res_description)
-                    link[atr] = relative_path
+        result_list = find_files(resource_dict, soup, domain_name,
+                                 url, base_path_name)
     with open(page_path, 'w') as f:
         f.write(soup.prettify())
     return result_list
