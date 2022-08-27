@@ -67,7 +67,7 @@ def test_create_name(test_case, expected, ext):
 
 
 def test_dowloads():
-    html_raw =  read_file(RAW) # open(RAW, 'r').read()
+    html_raw = read_file(RAW)
     html_expected = read_file(HTML)
     image = read_file(IMG)
     css = read_file(CSS)
@@ -105,13 +105,6 @@ def test_make_url_request():
         m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=200)
         result = make_url_request(INVALID_URL)
         assert result == 'Just file for test'
-
-
-def test_with_500():
-    with requests_mock.Mocker() as m:
-        m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
-        with pytest.raises(requests.exceptions.HTTPError):
-            make_url_request(INVALID_URL)
 
 
 def test_connection_error(requests_mock):
