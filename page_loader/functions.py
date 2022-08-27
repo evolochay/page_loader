@@ -11,16 +11,11 @@ logger = logging.getLogger("app.repository")
 
 def make_url_request(url, bytes=False):
     logger.info('Here is URL {}'.format(url))
-    try:
-        response = requests.get(url)
-        if response.status_code != 200:
-            logger.warning("problem with server`s response {}".format(url))
-            raise requests.exceptions.HTTPError
-        else:
-            return check_bytes(response, bytes)
-    except requests.exceptions.RequestException as e:
-        raise logger.error(e)
-        # raise sys.exit()
+    response = requests.get(url)
+    if response.status_code != 200:
+        logger.warning("problem with server`s response {}".format(url))
+    else:
+        return check_bytes(response, bytes)
 
 
 def check_bytes(response, bytes):
@@ -72,13 +67,9 @@ def create_name(url, ext):
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, "dir")
     files_dir_path = make_path(dir_name, resources_dir)
-    try:
+    if not os.path.exists(files_dir_path):
         os.mkdir(files_dir_path)
-        return files_dir_path
-    except FileExistsError as e:
-        logger.error('File exist error:'
-                     f'{(e)}')
-        raise
+    return files_dir_path
 
 
 def find_files(resource_dict, soup, domain_name, url, base_path_name):
@@ -132,10 +123,7 @@ def loading_res(res_description, output_path):
 
 
 def dir_validation(dir_path):
-    try:
-        if not os.access(dir_path, os.R_OK & os.W_OK & os.X_OK):
-            logger.error("You may not use this directory")
+    if not os.access(dir_path, os.R_OK & os.W_OK & os.X_OK):
+        logger.error("You may not use this directory")
+    else:
         return dir_path
-    except (FileNotFoundError, FileExistsError) as e:
-        logger.error(e)
-        raise Exception

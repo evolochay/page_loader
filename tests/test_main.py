@@ -4,6 +4,7 @@ from page_loader.page_loader import download
 from page_loader.functions import create_name, make_url_request, writing, download_page
 from page_loader.functions import make_path, create_dir
 import requests_mock
+from requests_mock import mock
 import pytest
 import os
 import requests
@@ -36,11 +37,7 @@ def test_directory_doesnt_exist():
             download(URL_COURSES, nonexistent_directory)
 
 
-def read_file(file_path, binary=False):
-    print(file_path)
-    if not binary:
-        with open(file_path, 'r') as f:
-            return f.read()
+def read_file(file_path):
     with open(file_path, 'rb') as file:
         return file.read()
 
@@ -68,16 +65,16 @@ def read_file(file_path, binary=False):
 def test_create_name(test_case, expected, ext):
     assert create_name(test_case, ext) == expected
 
-
+# TODO: изменить функцию, сделав фикстуру
 def test_dowloads():
-    html_raw = read_file(RAW)
+    html_raw =  read_file(RAW) # open(RAW, 'r').read()
     html_expected = read_file(HTML)
-    image = read_file(IMG, binary=True)
-    css = read_file(CSS, binary=True)
-    js = read_file(JS, binary=True)
+    image = read_file(IMG)
+    css = read_file(CSS)
+    js = read_file(JS)
 
     with requests_mock.Mocker() as m, TemporaryDirectory() as tmpdir:
-        m.get(URL, text=html_raw)
+        m.get(URL, content=html_raw)
         m.get(URL_IMG, content=image)
         m.get(URL_CSS, content=css)
         m.get(URL_JS, content=js)
@@ -91,23 +88,30 @@ def test_dowloads():
         actual_html = read_file(html_path)
         assert actual_html == html_expected
 
-        actual_img = read_file(img_path, binary=True)
+        actual_img = read_file(img_path)
         assert actual_img == image
 
-        actual_css = read_file(css_path, binary=True)
+        actual_css = read_file(css_path)
         assert actual_css == css
 
-        actual_js = read_file(js_path, binary=True)
+        actual_js = read_file(js_path)
         assert actual_js == js
 
         assert len(result) > 0
 
 
 def test_make_url_request():
-    with requests_mock.Mocker() as m:
+    with mock() as m:
         m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=200)
         result = make_url_request(INVALID_URL)
         assert result == 'Just file for test'
+
+
+def test_with_500():
+    with requests_mock.Mocker() as m:
+       m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
+       with pytest.raises(requests.exceptions.HTTPError):
+            make_url_request(INVALID_URL)
 
 
 def test_connection_error(requests_mock):
