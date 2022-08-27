@@ -40,6 +40,7 @@ def main():
     else:
         sys.exit(0)
 
+
 def create_errors_message(problem_name):
     if problem_name == 'connection error':
         print('IM HERE')
@@ -47,6 +48,7 @@ def create_errors_message(problem_name):
     elif problem_name == 'HTTP error':
         message = 'You`ve got some problem with HTTP'
     print(message)
+
 
 if __name__ == '__main__':
     main()

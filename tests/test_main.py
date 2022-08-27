@@ -65,7 +65,7 @@ def read_file(file_path):
 def test_create_name(test_case, expected, ext):
     assert create_name(test_case, ext) == expected
 
-# TODO: изменить функцию, сделав фикстуру
+
 def test_dowloads():
     html_raw =  read_file(RAW) # open(RAW, 'r').read()
     html_expected = read_file(HTML)
@@ -109,8 +109,8 @@ def test_make_url_request():
 
 def test_with_500():
     with requests_mock.Mocker() as m:
-       m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
-       with pytest.raises(requests.exceptions.HTTPError):
+        m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
+        with pytest.raises(requests.exceptions.HTTPError):
             make_url_request(INVALID_URL)
 
 
