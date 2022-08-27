@@ -4,7 +4,6 @@ from page_loader.page_loader import download
 from page_loader.functions import create_name, make_url_request, writing, download_page
 from page_loader.functions import make_path, create_dir
 import requests_mock
-from requests_mock import mock
 import pytest
 import os
 import requests
@@ -101,7 +100,7 @@ def test_dowloads():
 
 
 def test_make_url_request():
-    with mock() as m:
+    with requests_mock.Mocker() as m:
         m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=200)
         result = make_url_request(INVALID_URL)
         assert result == 'Just file for test'
