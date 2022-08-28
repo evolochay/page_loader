@@ -4,6 +4,7 @@ import sys
 from page_loader.page_loader import download
 from logs.log_config import init_logger
 from requests import (HTTPError, ConnectionError, Timeout)
+import traceback
 
 
 logger = init_logger('app')
@@ -34,11 +35,18 @@ def main():
             OSError,
             PermissionError,
             Timeout,
-            ):
+            ) as problem:
+        logger.error(f'PROBLEM DETECTED!  {traceback_message(problem)}')
         sys.exit(1)
 
     else:
         sys.exit(0)
+
+
+# print('Please, check connection {}'.format(traceback_message(problem)))
+def traceback_message(excp):
+    return '\n'.join(traceback.format_exc().splitlines()[:-2]) +\
+           '\n  {} ({})'.format(excp, excp.__class__)
 
 
 def create_errors_message(problem_name):

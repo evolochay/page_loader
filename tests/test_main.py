@@ -116,15 +116,6 @@ def test_connection_error(requests_mock):
         assert not os.listdir(tmpdirname)
 
 
-def test_writing_text():
-    data = 'hello'
-    with tempfile.TemporaryDirectory() as d:
-        path_file = os.path.join(d, 'new_file.html')
-        writing(path_file, data)
-        with open(path_file, 'r') as f:
-            assert data == f.read()
-
-
 @pytest.mark.parametrize('wrong_url', INVALID_URL)
 def test_download_page2(wrong_url):
     with tempfile.TemporaryDirectory() as d:

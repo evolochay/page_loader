@@ -12,10 +12,12 @@ logger = logging.getLogger("app.repository")
 def make_url_request(url, bytes=False):
     logger.info('Here is URL {}'.format(url))
     response = requests.get(url)
-    if response.status_code != 200:
-        logger.warning("problem with server`s response {}".format(url))
-    else:
-        return check_bytes(response, bytes)
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as error:
+        logger.error("problem with server`s response {}".format(url))
+        raise error
+    return check_bytes(response, bytes)
 
 
 def check_bytes(response, bytes):
@@ -67,9 +69,13 @@ def create_name(url, ext):
 def create_dir(dir_name, page_adress):
     resources_dir = create_name(page_adress, "dir")
     files_dir_path = make_path(dir_name, resources_dir)
-    if not os.path.exists(files_dir_path):
+    try:
         os.mkdir(files_dir_path)
-    return files_dir_path
+        return files_dir_path
+    except FileExistsError as error:
+        logger.error('File exist error:'
+                     f'{(error)}')
+        raise error
 
 
 def find_files(resource_dict, soup, domain_name, url, base_path_name):
@@ -125,5 +131,6 @@ def loading_res(res_description, output_path):
 def dir_validation(dir_path):
     if not os.access(dir_path, os.R_OK & os.W_OK & os.X_OK):
         logger.error("You may not use this directory")
+        raise UnboundLocalError
     else:
         return dir_path
