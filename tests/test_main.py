@@ -1,8 +1,9 @@
 from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.page_loader import download
-from page_loader.functions import create_name, make_url_request, writing, download_page
-from page_loader.functions import make_path, create_dir
+from page_loader.page import make_url_request, download_page
+from page_loader.naming import create_name
+from page_loader.directory import make_path, create_dir
 import requests_mock
 import pytest
 import os
@@ -146,3 +147,10 @@ def test_create_dir():
     with tempfile.TemporaryDirectory() as d:
         dir = create_dir(d, URL_COURSES)
         assert os.path.exists(dir)
+
+
+def test_with_500():
+    with requests_mock.Mocker() as m:
+        m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
+        with pytest.raises(requests.exceptions.HTTPError):
+            make_url_request(INVALID_URL)
