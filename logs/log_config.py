@@ -10,5 +10,7 @@ def init_logger(name):
     sh.setLevel(logging.DEBUG)
     logger.addHandler(sh)
     logger.debug('logger was initialized')
+    return logger
 
-logger = logging.getLogger(__name__)
+
+logger = init_logger(__name__)
