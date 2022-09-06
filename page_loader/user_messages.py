@@ -7,4 +7,6 @@ def create_errors_message(problem_name):
         message = 'You can not use this directory'
     elif problem_name == 'unexpected_err':
         message = 'We don`t know, what is wrong'
+    elif problem_name == 'timeout':
+        message = 'We are waiting too long'
     print(message)

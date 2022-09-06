@@ -12,6 +12,9 @@ def make_url_request(url, bytes=False):
     except requests.exceptions.HTTPError as error:
         logger.error("problem with server`s response {}".format(url))
         raise error
+    except requests.exceptions.Timeout as exception:
+        logger.error("Too long")
+        raise exception
     return check_bytes(response, bytes)
 
 

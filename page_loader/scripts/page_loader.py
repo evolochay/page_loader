@@ -1,6 +1,7 @@
 import argparse
 import os
 import sys
+import requests
 from page_loader.page_loader import download
 from requests import (HTTPError, ConnectionError)
 from page_loader.user_messages import create_errors_message
@@ -34,6 +35,9 @@ def main():
         sys.exit(1)
     except PermissionError:
         create_errors_message('permission denied')
+        sys.exit(1)
+    except requests.Timeout:
+        create_errors_message('timeout')
         sys.exit(1)
     except Exception:
         create_errors_message('unexpected_err')

@@ -1,3 +1,4 @@
+from socket import timeout
 from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.page_loader import download
@@ -66,40 +67,6 @@ def test_create_name(test_case, expected, ext):
     assert create_name(test_case, ext) == expected
 
 
-def test_dowloads():
-    html_raw = read_file(RAW)
-    html_expected = read_file(HTML)
-    image = read_file(IMG)
-    css = read_file(CSS)
-    js = read_file(JS)
-
-    with requests_mock.Mocker() as m, TemporaryDirectory() as tmpdir:
-        m.get(URL, content=html_raw)
-        m.get(URL_IMG, content=image)
-        m.get(URL_CSS, content=css)
-        m.get(URL_JS, content=js)
-        result = download(URL, tmpdir)
-
-        html_path = os.path.join(tmpdir, EXPECTED_HTML)
-        img_path = os.path.join(tmpdir, EXPECTED_IMG)
-        css_path = os.path.join(tmpdir, EXPECTED_CSS)
-        js_path = os.path.join(tmpdir, EXPECTED_JS)
-
-        actual_html = read_file(html_path)
-        assert actual_html == html_expected
-
-        actual_img = read_file(img_path)
-        assert actual_img == image
-
-        actual_css = read_file(css_path)
-        assert actual_css == css
-
-        actual_js = read_file(js_path)
-        assert actual_js == js
-
-        assert len(result) > 0
-
-
 def test_make_url_request():
     with requests_mock.Mocker() as m:
         m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=200)
@@ -149,8 +116,17 @@ def test_create_dir():
         assert os.path.exists(dir)
 
 
-def test_with_500():
+@pytest.mark.parametrize(
+    "code", [500, 400, 404])
+def test_http_errors(code):
     with requests_mock.Mocker() as m:
-        m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=500)
+        m.get(INVALID_URL, text=open('tests/fixtures/test_file.txt', 'r').read(), status_code=code)
         with pytest.raises(requests.exceptions.HTTPError):
             make_url_request(INVALID_URL)
+
+
+def test_with_timeout():
+    with requests_mock.Mocker() as m:
+        m.get(URL, exc=requests.Timeout)
+        with pytest.raises(requests.exceptions.Timeout):
+            make_url_request(URL)
