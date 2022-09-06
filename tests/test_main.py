@@ -1,5 +1,3 @@
-from socket import timeout
-from tempfile import TemporaryDirectory
 import tempfile
 from page_loader.page_loader import download
 from page_loader.page import make_url_request, download_page
