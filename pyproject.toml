@@ -25,6 +25,7 @@ requests-mock = "^1.9.3"
 flake8 = "^4.0.1"
 pytest = "^7.0.0"
 pytest-cov = "^3.0.0"
+black = "^22.8.0"
 
 [tool.poetry.scripts]
 page-loader = "page_loader.scripts.page_loader:main"

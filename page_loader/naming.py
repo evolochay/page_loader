@@ -5,16 +5,16 @@ from urllib.parse import urlparse, urlunparse
 
 def create_name(url, ext):
     url_parts = list(urlparse(url))
-    url_parts[0] = ''
+    url_parts[0] = ""
     without_scheme = urlunparse(url_parts)
-    if without_scheme[-1] == '/':
-        without_scheme = without_scheme[:len(without_scheme) - 1]
+    if without_scheme[-1] == "/":
+        without_scheme = without_scheme[: len(without_scheme) - 1]
     path_part, ending = os.path.splitext(without_scheme)
 
-    if ext == 'dir':
-        result = '-'.join(re.findall(r'\w+', path_part + ending)) + '_files'
-    elif ext == 'page' or ending == '':
-        result = '-'.join(re.findall(r'\w+', path_part + ending)) + '.html'
+    if ext == "dir":
+        result = "-".join(re.findall(r"\w+", path_part + ending)) + "_files"
+    elif ext == "page" or ending == "":
+        result = "-".join(re.findall(r"\w+", path_part + ending)) + ".html"
     else:
-        result = '-'.join(re.findall(r'\w+', path_part)) + ending
+        result = "-".join(re.findall(r"\w+", path_part)) + ending
     return result

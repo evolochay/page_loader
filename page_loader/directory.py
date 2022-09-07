@@ -14,8 +14,7 @@ def create_dir(dir_name, page_adress):
         os.mkdir(files_dir_path)
         return files_dir_path
     except FileExistsError as error:
-        logger.error('File exist error:'
-                     f'{(error)}')
+        logger.error("File exist error:" f"{(error)}")
         raise error
 
 

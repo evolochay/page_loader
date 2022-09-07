@@ -5,7 +5,7 @@ from page_loader.directory import make_path
 
 
 def make_url_request(url, bytes=False):
-    logger.info('Here is URL {}'.format(url))
+    logger.info("Here is URL {}".format(url))
     response = requests.get(url)
     try:
         response.raise_for_status()
@@ -26,8 +26,8 @@ def check_bytes(response, bytes):
 
 
 def download_page(url, path, get_content=make_url_request):
-    logger.info('download html page: {}'.format(url))
-    html_name = create_name(url, 'page')
+    logger.info("download html page: {}".format(url))
+    html_name = create_name(url, "page")
     new_html = make_path(path, html_name)
     content = get_content(url)
     writing(new_html, content)
@@ -36,8 +36,8 @@ def download_page(url, path, get_content=make_url_request):
 
 def writing(file, data, bytes=False):
     if bytes is True:
-        tag = 'wb'
+        tag = "wb"
     else:
-        tag = 'w'
+        tag = "w"
     with open(file, tag) as f:
         f.write(data)
