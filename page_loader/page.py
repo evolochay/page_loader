@@ -4,7 +4,7 @@ from page_loader.naming import create_name
 from page_loader.directory import make_path
 
 
-def make_url_request(url, bytes=False):
+def make_url_request(url):
     logger.info("Here is URL {}".format(url))
     response = requests.get(url)
     try:
@@ -15,14 +15,7 @@ def make_url_request(url, bytes=False):
     except requests.exceptions.Timeout as exception:
         logger.error("Too long")
         raise exception
-    return check_bytes(response, bytes)
-
-
-def check_bytes(response, bytes):
-    if bytes is True:
-        return response.content
-    else:
-        return response.text
+    return response.text
 
 
 def download_page(url, path, get_content=make_url_request):

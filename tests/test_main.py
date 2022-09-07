@@ -1,12 +1,12 @@
 import tempfile
-from page_loader.page_loader import download
-from page_loader.page import make_url_request, download_page
-from page_loader.naming import create_name
-from page_loader.directory import make_path, create_dir
 import requests_mock
 import pytest
 import os
 import requests
+from page_loader.page_loader import download
+from page_loader.page import make_url_request, download_page
+from page_loader.naming import create_name
+from page_loader.directory import make_path, create_dir
 
 
 URL_COURSES = "https://ru.hexlet.io/courses"
@@ -61,7 +61,7 @@ def test_make_url_request():
     with requests_mock.Mocker() as m:
         m.get(
             INVALID_URL,
-            text=open("tests/fixtures/test_file.txt", "r").read(),
+            content=read_file("tests/fixtures/test_file.txt"),
             status_code=200,
         )
         result = make_url_request(INVALID_URL)
@@ -115,7 +115,7 @@ def test_http_errors(code):
     with requests_mock.Mocker() as m:
         m.get(
             INVALID_URL,
-            text=open("tests/fixtures/test_file.txt", "r").read(),
+            content=read_file("tests/fixtures/test_file.txt"),
             status_code=code,
         )
         with pytest.raises(requests.exceptions.HTTPError):

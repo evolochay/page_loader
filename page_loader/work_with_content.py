@@ -59,5 +59,5 @@ def download_content(resources_dict, output_path):
 def loading_res(res_description, output_path):
     source = res_description["source"]
     rel_path = make_path(output_path, res_description["rel_path"])
-    data = make_url_request(source, bytes=True)
+    data = make_url_request(source)
     writing(rel_path, data, bytes=True)
