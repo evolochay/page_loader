@@ -22,6 +22,7 @@ def download_content(resource_dict, page_path, dir_path, dir_name, soup):
                 content = make_url_request(res_url)
                 writing(res_path, content)
             except (PermissionError, requests.RequestException):
+                logger.warning('I can not download {}'.format(res_name))
                 pass
             else:
                 res[source_atr] = make_path(dir_name, res_name)
