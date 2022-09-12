@@ -1,3 +1,4 @@
+from asyncio.log import logger
 import requests
 from urllib.parse import urljoin, urlparse
 from progress.bar import Bar
@@ -10,6 +11,7 @@ TAGS = {"img": "src", "link": "href", "script": "src"}
 
 def download_content(resource_dict, page_path, dir_path, dir_name, soup):
     count = len(resource_dict)
+    logger.info('I will download {} content links'.format(count))
     with Bar("Processing", max=count) as bar:
         for res in resource_dict:
             source_atr = TAGS[res.name]

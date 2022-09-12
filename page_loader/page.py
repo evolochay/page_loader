@@ -5,7 +5,7 @@ from page_loader.naming import create_name
 from page_loader.directory import make_path
 
 
-def make_url_request(url, bytes=False):
+def make_url_request(url):
     logger.info("Here is URL {}".format(url))
     response = requests.get(url)
     try:
@@ -29,7 +29,6 @@ def download_page(url, path):
 
 
 def writing(file, data):
-    print("IM HERE")
     try:
         with open(file, 'wb') as f:
             f.write(data)
