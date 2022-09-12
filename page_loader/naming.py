@@ -22,4 +22,4 @@ def create_name(url, ext):
 
 def make_clear_url(url):
     parse_url = urlparse(url)
-    return parse_url.scheme + "//" + parse_url.netloc
+    return parse_url.scheme + "://" + parse_url.netloc
