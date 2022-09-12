@@ -16,6 +16,7 @@ def make_url_request(url):
     except requests.exceptions.Timeout as exception:
         logger.error("Too long")
         raise exception
+    logger.info("Success {}".format(url))
     return response.content
 
 
