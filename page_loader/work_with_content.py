@@ -11,6 +11,9 @@ TAGS = {"img": "src", "link": "href", "script": "src"}
 
 def download_content(resource_dict, page_path, dir_path, dir_name, soup):
     count = len(resource_dict)
+    logger.info('page path{}'.format(page_path))
+    logger.info('dir path{}'.format(dir_path))
+    logger.info('dir name{}'.format(dir_name))
     logger.info('I will download {} content links'.format(count))
     with Bar("Processing", max=count) as bar:
         for res in resource_dict:
