@@ -1,10 +1,11 @@
 import requests
+from bs4 import BeautifulSoup
 from logs.log_config import logger
 from page_loader.naming import create_name
 from page_loader.directory import make_path
 
 
-def make_url_request(url):
+def make_url_request(url, bytes=False):
     logger.info("Here is URL {}".format(url))
     response = requests.get(url)
     try:
@@ -15,22 +16,28 @@ def make_url_request(url):
     except requests.exceptions.Timeout as exception:
         logger.error("Too long")
         raise exception
-    return response.text
+    return response.content
 
 
-def download_page(url, path, get_content=make_url_request):
+def download_page(url, path):
     logger.info("download html page: {}".format(url))
     html_name = create_name(url, "page")
     new_html = make_path(path, html_name)
-    content = get_content(url)
+    content = make_url_request(url)
     writing(new_html, content)
     return new_html
 
 
-def writing(file, data, bytes=False):
-    if bytes is True:
-        tag = "wb"
-    else:
-        tag = "w"
-    with open(file, tag) as f:
-        f.write(data)
+def writing(file, data):
+    print("IM HERE")
+    try:
+        with open(file, 'wb') as f:
+            f.write(data)
+    except PermissionError:
+        raise
+
+
+def get_soup(page_path):
+    with open(page_path, "r", encoding='utf-8') as hp:
+        soup = BeautifulSoup(hp.read(), "html.parser")
+    return soup

@@ -65,7 +65,7 @@ def test_make_url_request():
             status_code=200,
         )
         result = make_url_request(INVALID_URL)
-        assert result == "Just file for test"
+        assert result == b"Just file for test"
 
 
 def test_connection_error(requests_mock):
@@ -99,15 +99,16 @@ def fake_data(*args):
 def test_download_page1():
     with tempfile.TemporaryDirectory() as d:
         path_file = os.path.join(d, EXPECTED_FILE_NAME)
-        new_html = download_page(URL_COURSES, d, get_content=fake_data)
+        new_html = download_page(URL_COURSES, d)
         assert os.path.exists(new_html)
         assert new_html == path_file
 
 
 def test_create_dir():
     with tempfile.TemporaryDirectory() as d:
-        dir = create_dir(d, URL_COURSES)
+        dir_name, dir = create_dir(d, URL_COURSES)
         assert os.path.exists(dir)
+        assert len(dir_name) > 1
 
 
 @pytest.mark.parametrize("code", [500, 400, 404])

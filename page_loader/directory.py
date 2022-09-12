@@ -7,12 +7,12 @@ def make_path(path, file_name):
     return os.path.join(path, file_name)
 
 
-def create_dir(dir_name, page_adress):
-    resources_dir = create_name(page_adress, "dir")
-    files_dir_path = make_path(dir_name, resources_dir)
+def create_dir(dir_path, page_adress):
+    dir_name = create_name(page_adress, "dir")
+    files_dir_path = make_path(dir_path, dir_name)
     try:
         os.mkdir(files_dir_path)
-        return files_dir_path
+        return dir_name, files_dir_path
     except FileExistsError as error:
         logger.error("File exist error:" f"{(error)}")
         raise error

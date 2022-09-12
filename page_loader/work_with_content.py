@@ -1,63 +1,49 @@
-from bs4 import BeautifulSoup
+import requests
 from urllib.parse import urljoin, urlparse
 from progress.bar import Bar
-import os
 from page_loader.naming import create_name
 from page_loader.directory import make_path
 from page_loader.page import writing, make_url_request
-from logs.log_config import logger
+
+TAGS = {"img": "src", "link": "href", "script": "src"}
 
 
-def find_files(resource_dict, soup, domain_name, url, base_path_name):
-    result_list = []
-    for tag, atr in resource_dict.items():
-        all_links = soup.find_all(tag, attrs={atr: True})
-        for link in all_links:
-            source_url = link[atr]
-            source_dn = urlparse(source_url).netloc
-            if source_dn == domain_name or source_dn == "":
-                if source_dn == "":
-                    source_url = urljoin(url, source_url)
-                name = create_name(source_url, "file")
-                logger.info("File name: {}".format(name))
-                relative_path = make_path(base_path_name, name)
-                res_description = dict(
-                    [
-                        ("tag", tag),
-                        ("source", source_url),
-                        ("rel_path", relative_path),
-                    ]
-                )
-                result_list.append(res_description)
-                link[atr] = relative_path
-    return result_list
-
-
-def save_files(page_path, dir_path, url):
-    base_path_name = os.path.basename(dir_path)
-    domain_name = urlparse(url).netloc
-    resource_dict = {"img": "src", "link": "href", "script": "src"}
-    result_list = []
-    with open(page_path, "r", encoding="utf-8") as hp:
-        soup = BeautifulSoup(hp.read(), "html.parser")
-        result_list = find_files(
-            resource_dict, soup, domain_name, url, base_path_name
-        )
-    with open(page_path, "w") as f:
-        f.write(soup.prettify())
-    return result_list
-
-
-def download_content(resources_dict, output_path):
-    count = len(resources_dict)
+def download_content(resource_dict, page_path, dir_path, dir_name, soup):
+    count = len(resource_dict)
     with Bar("Processing", max=count) as bar:
-        for res in resources_dict:
-            loading_res(res, output_path)
+        for res in resource_dict:
+            source_atr = TAGS[res.name]
+            res_url = urljoin(page_path, res[source_atr])
+            res_name = create_name(res_url, "file")
+            try:
+                res_path = make_path(dir_path, res_name)
+                content = make_url_request(res_url)
+                writing(res_path, content)
+            except (PermissionError, requests.RequestException):
+                pass
+            else:
+                res[source_atr] = make_path(dir_name, res_name)
             bar.next()
+        save_html_changes(page_path, soup)
 
 
-def loading_res(res_description, output_path):
-    source = res_description["source"]
-    rel_path = make_path(output_path, res_description["rel_path"])
-    data = make_url_request(source)
-    writing(rel_path, data, bytes=True)
+def save_html_changes(page_path, soup):
+    with open(page_path, 'w') as hp:
+        hp.write(soup.prettify())
+
+
+def find_content(soup, url):
+    all_resources = list(map(lambda tag, atr:
+                             soup.find_all(tag, attrs={atr: True}),
+                             TAGS.keys(), TAGS.values()))
+    filter_resources = list(filter(lambda res:
+                                   check_parent_url(res[TAGS[res.name]],
+                                                    url),
+                                   sum(all_resources, [])))
+    return filter_resources
+
+
+def check_parent_url(url, parent_url):
+    domen1 = urlparse(url).netloc
+    domen2 = urlparse(url).netloc != urlparse(parent_url).netloc
+    return not(domen1 and domen2)
