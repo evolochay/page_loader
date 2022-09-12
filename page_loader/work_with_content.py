@@ -27,7 +27,7 @@ def download_content(resource_dict, page_path, dir_path, dir_name, soup):
             else:
                 res[source_atr] = make_path(dir_name, res_name)
             bar.next()
-        save_html_changes(page_path, soup)
+            save_html_changes(page_path, soup)
 
 
 def save_html_changes(page_path, soup):
