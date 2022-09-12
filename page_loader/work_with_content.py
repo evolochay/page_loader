@@ -9,7 +9,7 @@ from page_loader.page import writing, make_url_request
 TAGS = {"img": "src", "link": "href", "script": "src"}
 
 
-def download_content(resource_dict, page_path, dir_path, dir_name, soup):
+def download_content(resource_dict, page_path, dir_path, dir_name, soup, clear_url):
     count = len(resource_dict)
     logger.info('page path{}'.format(page_path))
     logger.info('dir path{}'.format(dir_path))
@@ -22,7 +22,7 @@ def download_content(resource_dict, page_path, dir_path, dir_name, soup):
             res_name = create_name(res_url, "file")
             try:
                 res_path = make_path(dir_path, res_name)
-                content = make_url_request(res_url)
+                content = make_url_request(clear_url + "/" + res_url)
                 writing(res_path, content)
             except (PermissionError, requests.RequestException) as e:
                 logger.error(e)
