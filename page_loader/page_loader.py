@@ -15,6 +15,7 @@ def download(page_url, destination_dir_name):
     dir_name, dir_path = create_dir(checked_dir, page_url)
     soup = get_soup(page_path)
     content = find_content(soup, page_url)
+    logger.info("PAGE URL {}".format(page_url))
     download_content(content, page_path, dir_path, dir_name, soup)
     logger.debug("Here is final PATH {}".format(page_path))
     return page_path
