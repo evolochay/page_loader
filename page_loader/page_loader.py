@@ -2,6 +2,7 @@ import os
 from page_loader.page import download_page, get_soup
 from page_loader.directory import create_dir, dir_validation
 from page_loader.work_with_content import download_content, find_content
+from page_loader.naming import make_clear_url
 from logs.log_config import logger
 
 
@@ -16,6 +17,8 @@ def download(page_url, destination_dir_name):
     soup = get_soup(page_path)
     content = find_content(soup, page_url)
     logger.info("PAGE URL {}".format(page_url))
+    clear_url = make_clear_url(page_url)
+    logger.info("CLEAR URL {}".format(clear_url))
     download_content(content, page_path, dir_path, dir_name, soup)
     logger.debug("Here is final PATH {}".format(page_path))
     return page_path

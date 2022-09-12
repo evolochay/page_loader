@@ -18,3 +18,8 @@ def create_name(url, ext):
     else:
         result = "-".join(re.findall(r"\w+", path_part)) + ending
     return result
+
+
+def clear_url(url):
+    parse_url = urlparse(url)
+    return parse_url.scheme+"//"+parse_url.netloc
