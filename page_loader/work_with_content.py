@@ -14,15 +14,16 @@ def download_content(page_url, page_path, dir_path, dir_name):
     resources = find_content(soup, page_url)
     clear_url = make_clear_url(page_url)
     count = len(resources)
+
     logger.info('I will download {} content links'.format(count))
     with Bar("Processing", max=count) as bar:
         for res in resources:
             source_atr = TAGS[res.name]
             res_url = urljoin(page_path, res[source_atr])
-            res_name = create_name(res_url, "file")
+            content_url = check_http(clear_url, res_url)
+            res_name = create_name(content_url, "file")
             try:
                 res_path = make_path(dir_path, res_name)
-                content_url = check_http(clear_url, res_url)
                 content = make_url_request(content_url)
                 writing(res_path, content)
             except (PermissionError, requests.RequestException) as e:
@@ -30,7 +31,7 @@ def download_content(page_url, page_path, dir_path, dir_name):
                 logger.warning('I can not download {}'.format(res_name))
                 pass
             else:
-                res[source_atr] = res_name
+                res[source_atr] = make_path(dir_name, res_name)
             bar.next()
             save_html_changes(page_path, soup)
 
