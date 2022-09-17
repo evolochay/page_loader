@@ -55,4 +55,4 @@ def find_content(soup, url):
 def check_parent_url(url, parent_url):
     domen1 = urlparse(url).netloc
     domen2 = urlparse(url).netloc != urlparse(parent_url).netloc
-    return not(domen1 and domen2)
+    return not (domen1 and domen2)
