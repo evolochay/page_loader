@@ -2,21 +2,26 @@ from asyncio.log import logger
 import requests
 from urllib.parse import urljoin, urlparse
 from progress.bar import Bar
-from page_loader.naming import create_name
+from page_loader.naming import create_name, make_clear_url
 from page_loader.directory import make_path
-from page_loader.page import writing, make_url_request
+from page_loader.page import writing, make_url_request, get_soup
 
 TAGS = {"img": "src", "link": "href", "script": "src"}
 
 
-def download_content(resource_dict, page_path, dir_path, dir_name, soup, clear_url):
-    count = len(resource_dict)
+def download_content(page_url, page_path, dir_path, dir_name):
+    soup = get_soup(page_path)
+    resources = find_content(soup, page_url)
+    logger.info("page url {}".format(page_url))
+    clear_url = make_clear_url(page_url)
+    logger.info("clear url {}".format(clear_url))
+    count = len(resources)
     logger.info('page path{}'.format(page_path))
     logger.info('dir path{}'.format(dir_path))
     logger.info('dir name{}'.format(dir_name))
     logger.info('I will download {} content links'.format(count))
     with Bar("Processing", max=count) as bar:
-        for res in resource_dict:
+        for res in resources:
             source_atr = TAGS[res.name]
             res_url = urljoin(page_path, res[source_atr])
             res_name = create_name(res_url, "file")
