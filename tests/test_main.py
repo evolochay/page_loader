@@ -7,6 +7,7 @@ from page_loader.page_loader import download
 from page_loader.page import make_url_request, download_page
 from page_loader.naming import create_name
 from page_loader.directory import make_path, create_dir
+from page_loader.naming import make_clear_url, check_http, create_name
 
 
 URL_COURSES = "https://ru.hexlet.io/courses"
@@ -162,3 +163,12 @@ def test_dowloads(tmpdir, requests_mock):
     assert actual_js == js
 
     assert len(result) > 0
+
+
+def test_clear_url():
+    assert make_clear_url(URL_COURSES) == "https://ru.hexlet.io"
+
+
+def test_check_http():
+    assert check_http(URL_COURSES, RAW) == URL_COURSES + RAW
+    assert check_http(RAW, URL_COURSES) == URL_COURSES
