@@ -30,7 +30,7 @@ def download_content(page_url, page_path, dir_path, dir_name):
                 logger.warning('I can not download {}'.format(res_name))
                 pass
             else:
-                res[source_atr] = make_path(dir_name, res_name)
+                res[source_atr] = res_name
             bar.next()
             save_html_changes(page_path, soup)
 
