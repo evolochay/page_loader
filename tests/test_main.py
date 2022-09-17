@@ -5,7 +5,6 @@ import os
 import requests
 from page_loader.page_loader import download
 from page_loader.page import make_url_request, download_page
-from page_loader.naming import create_name
 from page_loader.directory import make_path, create_dir
 from page_loader.naming import make_clear_url, check_http, create_name
 
