@@ -10,3 +10,4 @@ def create_errors_message(problem_name):
     elif problem_name == "timeout":
         message = "We are waiting too long"
     print(message)
+    return message

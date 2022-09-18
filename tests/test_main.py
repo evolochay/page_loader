@@ -7,6 +7,7 @@ from page_loader.page_loader import download
 from page_loader.page import make_url_request, download_page
 from page_loader.directory import make_path, create_dir
 from page_loader.naming import make_clear_url, check_http, create_name
+from page_loader.user_messages import create_errors_message
 
 
 URL_COURSES = "https://ru.hexlet.io/courses"
@@ -27,6 +28,18 @@ EXPECTED_IMG = os.path.join(DIRECTORY, "ru-hexlet-io-professions-python.png")
 EXPECTED_CSS = os.path.join(DIRECTORY, "ru-hexlet-io-assets-application.css")
 EXPECTED_JS = os.path.join(DIRECTORY, "ru-hexlet-io-packs-js-runtime.js")
 INVALID_URL = "htps://ru.hexlet.io/courses"
+
+
+@pytest.mark.parametrize(
+    "problem_name, message",
+    [
+        ("connection error", "Please, check Internet connection"),
+        ("HTTP error", "You`ve got some problem with HTTP"),
+        ("permission denied", "You can not use this directory"),
+        ("unexpected_err", "We don`t know, what is wrong"),
+        ("timeout", "We are waiting too long")])
+def test_create_errors_message(problem_name, message):
+    assert create_errors_message(problem_name) == message
 
 
 def test_directory_doesnt_exist():
@@ -109,6 +122,8 @@ def test_create_dir():
         dir_name, dir = create_dir(d, URL_COURSES)
         assert os.path.exists(dir)
         assert len(dir_name) > 1
+        with pytest.raises(FileExistsError):
+            dir_name, dir = create_dir(d, URL_COURSES)
 
 
 @pytest.mark.parametrize("code", [500, 400, 404])
@@ -125,7 +140,7 @@ def test_http_errors(code):
 
 def test_with_timeout():
     with requests_mock.Mocker() as m:
-        m.get(URL, exc=requests.Timeout)
+        m.get(URL, exc=requests.exceptions.Timeout)
         with pytest.raises(requests.exceptions.Timeout):
             make_url_request(URL)
 

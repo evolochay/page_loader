@@ -13,9 +13,9 @@ def make_url_request(url):
     except requests.exceptions.HTTPError as error:
         logger.error("problem with server`s response {}".format(url))
         raise error
-    except requests.exceptions.Timeout as exception:
+    except requests.exceptions.Timeout as error:
         logger.error("Too long")
-        raise exception
+        raise error
     logger.info("Success {}".format(url))
     return response.content
 
