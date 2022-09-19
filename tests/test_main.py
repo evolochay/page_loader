@@ -3,16 +3,21 @@ import requests_mock
 import pytest
 import os
 import requests
+import argparse
+from bs4 import BeautifulSoup
 from page_loader.page_loader import download
 from page_loader.page import make_url_request, download_page
 from page_loader.directory import make_path, create_dir
 from page_loader.naming import make_clear_url, check_http, create_name
 from page_loader.user_messages import create_errors_message
+from page_loader.scripts.page_loader import make_parser, main
+from page_loader.work_with_content import find_content
 
 
 URL_COURSES = "https://ru.hexlet.io/courses"
 URL_Q = "https://quotes.toscrape.com"
 EXPECTED_FILE_NAME = "ru-hexlet-io-courses.html"
+HTML_WITH_LINKS = "tests/fixtures/html_with_links.html"
 RAW = "tests/fixtures/raw.html"
 IMG = "tests/fixtures/image.png"
 HTML = "tests/fixtures/expected.html"
@@ -186,3 +191,27 @@ def test_clear_url():
 def test_check_http():
     assert check_http(URL_COURSES, RAW) == URL_COURSES + RAW
     assert check_http(RAW, URL_COURSES) == URL_COURSES
+
+
+def test_make_parser():
+    parser = make_parser()
+    assert isinstance(parser, argparse.ArgumentParser)
+
+
+def test_script():
+    fixt = HTML
+    with requests_mock.Mocker() as mock:
+        with tempfile.TemporaryDirectory() as t:
+            mock.return_value = URL_COURSES, t
+            with requests_mock.Mocker() as m:
+                m.get(URL_COURSES, text=open(fixt, 'r').read(), status_code=500)
+                with pytest.raises(SystemExit) as e:
+                    main()
+                assert e.value.code == 2
+
+
+def test_find_content():
+    with open(HTML_WITH_LINKS, 'r', encoding='utf-8') as f:
+        soup = BeautifulSoup(f.read(), features="html.parser")
+        all_resources = find_content(soup, URL)
+        assert len(all_resources) == 5
