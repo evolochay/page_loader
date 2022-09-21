@@ -47,7 +47,7 @@ def find_content(soup, url):
                              TAGS.keys(), TAGS.values()))
     filter_resources = list(filter(lambda res:
                                    compare_host_name(res[TAGS[res.name]],
-                                                    url),
+                                                     url),
                                    sum(all_resources, [])))
     return filter_resources
 
