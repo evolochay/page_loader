@@ -1,16 +1,12 @@
-import tempfile
-import requests_mock
 import pytest
 import os
 import requests
-import argparse
 from bs4 import BeautifulSoup
 from page_loader.page_loader import download
 from page_loader.page import make_url_request, download_page
 from page_loader.directory import make_path, create_dir
 from page_loader.naming import make_clear_url, check_http, create_name
 from page_loader.user_messages import create_errors_message
-from page_loader.scripts.page_loader import make_parser, main
 from page_loader.work_with_content import find_content
 
 
