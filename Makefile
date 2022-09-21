@@ -1,9 +1,9 @@
-# py := poetry run
+py := poetry run
 
-# package_dir := page_loader
-# tests_dir := tests
-# code_dir := $(package_dir) $(tests_dir)
-# reports_dir := reports
+package_dir := page_loader
+tests_dir := tests
+code_dir := $(package_dir) $(tests_dir)
+reports_dir := reports
 
 
 install:
@@ -30,16 +30,16 @@ make lint:
 	poetry run flake8 page_loader
 
 
- make test-coverage:
-	poetry run pytest --cov=page_loader --cov-report xml tests/
+# make test-coverage:
+#	poetry run pytest --cov=page_loader --cov-report xml tests/
 
-# .PHONY: test-coverage
-# test-coverage:  ## Make code-coverage report
-#	mkdir -p $(reports_dir)/tests/
-#	$(py) pytest --cov=$(code_dir) --html=$(reports_dir)/tests/index.html $(tests_dir)/
-#	$(py) coverage html -d $(reports_dir)/coverage
+.PHONY: test-coverage
+test-coverage:  ## Make code-coverage report
+	mkdir -p $(reports_dir)/tests/
+	$(py) pytest --cov=$(code_dir) --html=$(reports_dir)/tests/index.html $(tests_dir)/
+	$(py) coverage html -d $(reports_dir)/coverage
 
-# .PHONY: test-coverage-view
-# test-coverage-view:  ## View code-coverage report in browser
-#	$(py) coverage html -d $(reports_dir)/coverage
-#	python3 -c "import webbrowser; webbrowser.open('file://$(shell pwd)/reports/coverage/index.html')"
+.PHONY: test-coverage-view
+test-coverage-view:  ## View code-coverage report in browser
+	$(py) coverage html -d $(reports_dir)/coverage
+	python3 -c "import webbrowser; webbrowser.open('file://$(shell pwd)/reports/coverage/index.html')"

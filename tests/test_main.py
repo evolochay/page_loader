@@ -47,11 +47,10 @@ def test_create_errors_message(problem_name, message):
     assert create_errors_message(problem_name) == message
 
 
-def test_directory_doesnt_exist():
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        nonexistent_directory = os.path.join(tmpdirname, "something")
-        with pytest.raises(UnboundLocalError):
-            download(URL_COURSES, nonexistent_directory)
+def test_directory_doesnt_exist(tmpdir):
+    nonexistent_directory = os.path.join(tmpdir, "something")
+    with pytest.raises(UnboundLocalError):
+        download(URL_COURSES, nonexistent_directory)
 
 
 def read_file(file_path):
@@ -75,82 +74,70 @@ def test_create_name(test_case, expected, ext):
     assert create_name(test_case, ext) == expected
 
 
-def test_make_url_request():
-    with requests_mock.Mocker() as m:
-        m.get(
-            INVALID_URL,
-            content=read_file("tests/fixtures/test_file.txt"),
-            status_code=200,
-        )
-        result = make_url_request(INVALID_URL)
-        assert result == b"Just file for test"
+def test_make_url_request(requests_mock):
+    requests_mock.get(
+        INVALID_URL,
+        content=read_file("tests/fixtures/test_file.txt"),
+        status_code=200,
+    )
+    result = make_url_request(INVALID_URL)
+    assert result == b"Just file for test"
 
 
-def test_connection_error(requests_mock):
+def test_connection_error(requests_mock, tmpdir):
     invalid_url = "https://badsite.com"
     requests_mock.get(invalid_url, exc=requests.exceptions.ConnectionError)
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        assert not os.listdir(tmpdirname)
-        with pytest.raises(Exception):
-            assert download(invalid_url, tmpdirname)
-        assert not os.listdir(tmpdirname)
+    assert not os.listdir(tmpdir)
+    with pytest.raises(Exception):
+        assert download(invalid_url, tmpdir)
+    assert not os.listdir(tmpdir)
 
 
 @pytest.mark.parametrize("wrong_url", INVALID_URL)
-def test_download_page2(wrong_url):
-    with tempfile.TemporaryDirectory() as d:
-        with pytest.raises(Exception):
-            download_page(wrong_url, d)
+def test_download_page2(wrong_url, tmpdir):
+    with pytest.raises(Exception):
+        download_page(wrong_url, tmpdir)
 
 
-def test_make_path():
-    with tempfile.TemporaryDirectory() as tmpdirname:
-        file_name = "file_test_name"
-        result = os.path.join(tmpdirname, file_name)
-        assert make_path(tmpdirname, file_name) == result
+def test_make_path(tmpdir):
+    file_name = "file_test_name"
+    result = os.path.join(tmpdir, file_name)
+    assert make_path(tmpdir, file_name) == result
 
 
-def fake_data(*args):
-    return "hello"
+def test_download_page1(tmpdir):
+    path_file = os.path.join(tmpdir, EXPECTED_FILE_NAME)
+    new_html = download_page(URL_COURSES, tmpdir)
+    assert os.path.exists(new_html)
+    assert new_html == path_file
 
 
-def test_download_page1():
-    with tempfile.TemporaryDirectory() as d:
-        path_file = os.path.join(d, EXPECTED_FILE_NAME)
-        new_html = download_page(URL_COURSES, d)
-        assert os.path.exists(new_html)
-        assert new_html == path_file
-
-
-def test_create_dir():
-    with tempfile.TemporaryDirectory() as d:
-        dir_name, dir = create_dir(d, URL_COURSES)
-        assert os.path.exists(dir)
-        assert len(dir_name) > 1
-        with pytest.raises(FileExistsError):
-            dir_name, dir = create_dir(d, URL_COURSES)
+def test_create_dir(tmpdir):
+    dir_name, dir = create_dir(tmpdir, URL_COURSES)
+    assert os.path.exists(dir)
+    assert len(dir_name) > 1
+    with pytest.raises(FileExistsError):
+        dir_name, dir = create_dir(tmpdir, URL_COURSES)
 
 
 @pytest.mark.parametrize("code", [500, 400, 404])
-def test_http_errors(code):
-    with requests_mock.Mocker() as m:
-        m.get(
-            INVALID_URL,
-            content=read_file("tests/fixtures/test_file.txt"),
-            status_code=code,
-        )
-        with pytest.raises(requests.exceptions.HTTPError):
-            make_url_request(INVALID_URL)
+def test_http_errors(code, requests_mock):
+    requests_mock.get(
+        INVALID_URL,
+        content=read_file("tests/fixtures/test_file.txt"),
+        status_code=code,
+    )
+    with pytest.raises(requests.exceptions.HTTPError):
+        make_url_request(INVALID_URL)
 
 
-def test_with_timeout():
-    with requests_mock.Mocker() as m:
-        m.get(URL, exc=requests.exceptions.Timeout)
-        with pytest.raises(requests.exceptions.Timeout):
-            make_url_request(URL)
+def test_with_timeout(requests_mock, tmpdir):
+    requests_mock.get(URL, exc=requests.exceptions.Timeout)
+    with pytest.raises(requests.exceptions.Timeout):
+        make_url_request(URL)
+        download(URL, tmpdir)
 
 
-@pytest.fixture()
 def test_dowloads(tmpdir, requests_mock):
     html_raw = read_file(RAW)
     html_expected = read_file(HTML)
@@ -191,23 +178,6 @@ def test_clear_url():
 def test_check_http():
     assert check_http(URL_COURSES, RAW) == URL_COURSES + RAW
     assert check_http(RAW, URL_COURSES) == URL_COURSES
-
-
-def test_make_parser():
-    parser = make_parser()
-    assert isinstance(parser, argparse.ArgumentParser)
-
-
-def test_script():
-    fixt = HTML
-    with requests_mock.Mocker() as mock:
-        with tempfile.TemporaryDirectory() as t:
-            mock.return_value = URL_COURSES, t
-            with requests_mock.Mocker() as m:
-                m.get(URL_COURSES, text=open(fixt, 'r').read(), status_code=500)
-                with pytest.raises(SystemExit) as e:
-                    main()
-                assert e.value.code == 2
 
 
 def test_find_content():
