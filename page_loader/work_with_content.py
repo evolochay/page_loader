@@ -33,7 +33,7 @@ def download_content(page_url, page_path, dir_path, dir_name):
             else:
                 res[source_atr] = make_path(dir_name, res_name)
             bar.next()
-            save_html_changes(page_path, soup)
+    save_html_changes(page_path, soup)
 
 
 def save_html_changes(page_path, soup):
@@ -46,13 +46,14 @@ def find_content(soup, url):
                              soup.find_all(tag, attrs={atr: True}),
                              TAGS.keys(), TAGS.values()))
     filter_resources = list(filter(lambda res:
-                                   check_parent_url(res[TAGS[res.name]],
+                                   compare_host_name(res[TAGS[res.name]],
                                                     url),
                                    sum(all_resources, [])))
     return filter_resources
 
 
-def check_parent_url(url, parent_url):
-    domen1 = urlparse(url).netloc
-    domen2 = urlparse(url).netloc != urlparse(parent_url).netloc
-    return not (domen1 and domen2)
+def compare_host_name(url, parent_url):
+    url_domain = urlparse(url).netloc
+    same_domain_name = urlparse(url).netloc != urlparse(parent_url).netloc
+    print(same_domain_name)
+    return not (url_domain and same_domain_name)
