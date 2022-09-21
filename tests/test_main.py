@@ -6,7 +6,7 @@ from page_loader.page_loader import download
 from page_loader.page import make_url_request, download_page
 from page_loader.directory import make_path, create_dir
 from page_loader.naming import make_clear_url, check_http, create_name
-from page_loader.user_messages import create_errors_message
+from page_loader.user_messages import Message
 from page_loader.work_with_content import find_content
 
 
@@ -34,18 +34,18 @@ INVALID_URL = "htps://ru.hexlet.io/courses"
 @pytest.mark.parametrize(
     "problem_name, message",
     [
-        ("connection error", "Please, check Internet connection"),
-        ("HTTP error", "You`ve got some problem with HTTP"),
-        ("permission denied", "You can not use this directory"),
-        ("unexpected_err", "We don`t know, what is wrong"),
-        ("timeout", "We are waiting too long")])
+        (Message.CONNECTION_ERROR, "Please, check Internet connection"),
+        (Message.HTTP_ERROR, "You`ve got some problem with HTTP"),
+        (Message.PERMISSION_DENIED, "You can not use this directory"),
+        (Message.UNEXPECTED, "We don`t know, what is wrong"),
+        (Message.TIMEOUT, "We are waiting too long")])
 def test_create_errors_message(problem_name, message):
-    assert create_errors_message(problem_name) == message
+    assert problem_name.value == message
 
 
 def test_directory_doesnt_exist(tmpdir):
     nonexistent_directory = os.path.join(tmpdir, "something")
-    with pytest.raises(UnboundLocalError):
+    with pytest.raises(PermissionError):
         download(URL_COURSES, nonexistent_directory)
 
 

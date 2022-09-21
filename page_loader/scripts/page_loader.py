@@ -3,7 +3,7 @@ import os
 import sys
 from page_loader.page_loader import download
 from requests import HTTPError, ConnectionError
-from page_loader.user_messages import create_errors_message
+from page_loader.user_messages import Message
 
 
 def make_parser():
@@ -27,16 +27,16 @@ def main():
         downloaded_page = download(args.page_adress, args.output)
         print(downloaded_page)
     except ConnectionError:
-        create_errors_message("connection error")
+        print(Message.CONNECTION_ERROR)
         sys.exit(1)
     except HTTPError:
-        create_errors_message("HTTP error")
+        print(Message.HTTP_ERROR)
         sys.exit(1)
     except PermissionError:
-        create_errors_message("permission denied")
+        print(Message.PERMISSION_DENIED)
         sys.exit(1)
     except Exception:
-        create_errors_message("unexpected_err")
+        print(Message.UNEXPECTED)
         sys.exit(1)
 
     else:

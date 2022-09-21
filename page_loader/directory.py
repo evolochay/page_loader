@@ -18,9 +18,9 @@ def create_dir(dir_path, page_adress):
         raise error
 
 
-def dir_validation(dir_path):
+def chech_dir_access(dir_path):
     if not os.access(dir_path, os.R_OK & os.W_OK & os.X_OK):
         logger.error("You may not use this directory")
-        raise UnboundLocalError
+        raise PermissionError
     else:
         return dir_path
