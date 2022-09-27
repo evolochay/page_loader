@@ -4,7 +4,7 @@ import os
 from page_loader.user_messages import Message
 from page_loader.page_loader import download
 from tests.test_main import read_file
-from page_loader.page import make_url_request, make_page_path
+from page_loader.page import make_url_request
 
 
 INVALID_URL = "htps://ru.hexlet.io/courses"
@@ -40,9 +40,3 @@ def test_http_errors(code, requests_mock):
     )
     with pytest.raises(requests.exceptions.HTTPError):
         make_url_request(INVALID_URL)
-
-
-# @pytest.mark.parametrize("wrong_url", INVALID_URL)
-# def test_download_page2(wrong_url, tmpdir):
-#    with pytest.raises(Exception):
-#        make_page_path(wrong_url, tmpdir)

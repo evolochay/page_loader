@@ -15,7 +15,6 @@ URL = "https://ru.hexlet.io"
 def test_download_page1(tmpdir):
     path_file = os.path.join(tmpdir, EXPECTED_FILE_NAME)
     new_html = make_page_path(URL_COURSES, tmpdir)
-    # assert os.path.exists(new_html)
     assert new_html == path_file
 
 
