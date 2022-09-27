@@ -1,7 +1,7 @@
 import os
 import requests
 import pytest
-from page_loader.page import make_url_request, download_page
+from page_loader.page import make_url_request, make_page_path
 from page_loader.page_loader import download
 from tests.test_main import read_file
 
@@ -14,8 +14,8 @@ URL = "https://ru.hexlet.io"
 
 def test_download_page1(tmpdir):
     path_file = os.path.join(tmpdir, EXPECTED_FILE_NAME)
-    new_html = download_page(URL_COURSES, tmpdir)
-    assert os.path.exists(new_html)
+    new_html = make_page_path(URL_COURSES, tmpdir)
+    # assert os.path.exists(new_html)
     assert new_html == path_file
 
 

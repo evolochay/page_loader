@@ -20,13 +20,11 @@ def make_url_request(url):
     return response.content
 
 
-def download_page(url, path):
+def make_page_path(url, path):
     logger.info("download html page: {}".format(url))
     html_name = create_name(url, "page")
-    new_html = make_path(path, html_name)
-    content = make_url_request(url)
-    writing(new_html, content)
-    return new_html
+    page_path = make_path(path, html_name)
+    return page_path
 
 
 def writing(file, data):
@@ -37,7 +35,7 @@ def writing(file, data):
         raise
 
 
-def get_soup(page_path):
-    with open(page_path, "r", encoding='utf-8') as hp:
-        soup = BeautifulSoup(hp.read(), "html.parser")
+def get_soup(url):
+    response = make_url_request(url)
+    soup = BeautifulSoup(response, "html.parser")
     return soup

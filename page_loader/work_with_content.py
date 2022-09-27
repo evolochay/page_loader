@@ -4,14 +4,12 @@ from urllib.parse import urljoin, urlparse
 from progress.bar import Bar
 from page_loader.naming import create_name, make_clear_url, check_http
 from page_loader.directory import make_path
-from page_loader.page import writing, make_url_request, get_soup
+from page_loader.page import writing, make_url_request
 
 TAGS = {"img": "src", "link": "href", "script": "src"}
 
 
-def download_content(page_url, page_path, dir_path, dir_name):
-    soup = get_soup(page_path)
-    resources = find_content(soup, page_url)
+def download_content(page_url, page_path, dir_path, dir_name, resources, soup):
     clear_url = make_clear_url(page_url)
     count = len(resources)
 
@@ -27,7 +25,7 @@ def download_content(page_url, page_path, dir_path, dir_name):
                 content = make_url_request(content_url)
                 writing(res_path, content)
             except (PermissionError, requests.RequestException) as e:
-                logger.error(e)
+                logger.warning(e)
                 logger.warning('I can not download {}'.format(res_name))
                 pass
             else:
