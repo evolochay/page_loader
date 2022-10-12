@@ -1,6 +1,6 @@
 import os
 from bs4 import BeautifulSoup
-from page_loader.page_loader import download
+# from page_loader.page_loader import download
 from page_loader.work_with_content import find_resources
 
 
@@ -26,41 +26,11 @@ def read_file(file_path):
         return file.read()
 
 
-def test_dowloads(tmpdir, requests_mock):
-    html_raw = read_file(RAW)
-    html_expected = read_file(HTML)
-    image = read_file(IMG)
-    css = read_file(CSS)
-    js = read_file(JS)
-
-    requests_mock.get(URL, content=html_raw)
-    requests_mock.get(URL_IMG, content=image)
-    requests_mock.get(URL_CSS, content=css)
-    requests_mock.get(URL_JS, content=js)
-    result = download(URL, tmpdir)
-
-    html_path = os.path.join(tmpdir, EXPECTED_HTML)
-    img_path = os.path.join(tmpdir, EXPECTED_IMG)
-    css_path = os.path.join(tmpdir, EXPECTED_CSS)
-    js_path = os.path.join(tmpdir, EXPECTED_JS)
-
-    actual_html = read_file(html_path)
-    assert actual_html == html_expected
-
-    actual_img = read_file(img_path)
-    assert actual_img == image
-
-    actual_css = read_file(css_path)
-    assert actual_css == css
-
-    actual_js = read_file(js_path)
-    assert actual_js == js
-
-    assert len(result) > 0
-
-
-def test_find_content():
+def test_find_content(tmpdir):
     with open(HTML_WITH_LINKS, 'r', encoding='utf-8') as f:
         soup = BeautifulSoup(f.read(), features="html.parser")
-        all_resources = find_resources(soup, URL)
+        all_resources, tag_lists = find_resources(soup, tmpdir, URL)
+        for res in all_resources:
+            print(res)
         assert len(all_resources) == 5
+        assert len(tag_lists) == 5
