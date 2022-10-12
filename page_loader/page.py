@@ -27,7 +27,7 @@ def make_page_path(url, path):
     return page_path
 
 
-def writing(file, data):
+def write_data(file, data):
     try:
         with open(file, 'wb') as f:
             f.write(data)
@@ -35,7 +35,6 @@ def writing(file, data):
         raise
 
 
-def get_soup(url):
-    response = make_url_request(url)
+def get_soup(response):
     soup = BeautifulSoup(response, "html.parser")
     return soup

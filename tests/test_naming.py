@@ -1,5 +1,5 @@
 import pytest
-from page_loader.naming import make_clear_url, check_http, create_name
+from page_loader.naming import make_clear_url, make_url_with_scheme, create_name
 
 
 URL_COURSES = "https://ru.hexlet.io/courses"
@@ -27,5 +27,5 @@ def test_clear_url():
 
 
 def test_check_http():
-    assert check_http(URL_COURSES, RAW) == URL_COURSES + RAW
-    assert check_http(RAW, URL_COURSES) == URL_COURSES
+    assert make_url_with_scheme(URL_COURSES, RAW) == URL_COURSES + RAW
+    assert make_url_with_scheme(RAW, URL_COURSES) == URL_COURSES

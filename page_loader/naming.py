@@ -25,7 +25,7 @@ def make_clear_url(url):
     return parse_url.scheme + "://" + parse_url.netloc
 
 
-def check_http(page_url, res_url):
+def make_url_with_scheme(page_url, res_url):
     parse_url = urlparse(res_url)
     if parse_url.scheme:
         return res_url

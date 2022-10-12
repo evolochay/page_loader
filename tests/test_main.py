@@ -1,7 +1,7 @@
 import os
 from bs4 import BeautifulSoup
 from page_loader.page_loader import download
-from page_loader.work_with_content import find_content
+from page_loader.work_with_content import find_resources
 
 
 HTML_WITH_LINKS = "tests/fixtures/html_with_links.html"
@@ -62,5 +62,5 @@ def test_dowloads(tmpdir, requests_mock):
 def test_find_content():
     with open(HTML_WITH_LINKS, 'r', encoding='utf-8') as f:
         soup = BeautifulSoup(f.read(), features="html.parser")
-        all_resources = find_content(soup, URL)
+        all_resources = find_resources(soup, URL)
         assert len(all_resources) == 5
