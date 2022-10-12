@@ -15,7 +15,7 @@ def download(page_url, destination_dir_name):
     page_response = make_url_request(page_url)
     soup = get_soup(page_response)
     page_path = make_page_path(page_url, checked_dir)
-    dir_name, dir_path = create_dir(checked_dir, page_url)
+    dir_path = create_dir(checked_dir, page_url)
     resourses, tags_list = find_resources(soup, dir_path, page_url)
     download_content(resourses)
     replace_res_path(tags_list)

@@ -5,7 +5,7 @@ from urllib.parse import urljoin, urlparse
 from progress.bar import Bar
 from page_loader.naming import create_name
 from page_loader.directory import make_path
-# from page_loader.page import write_data, make_url_request
+
 
 TAGS = {"img": "src", "link": "href", "script": "src"}
 

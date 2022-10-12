@@ -12,9 +12,7 @@ def create_dir(dir_path, page_adress):
     files_dir_path = make_path(dir_path, dir_name)
     try:
         os.mkdir(files_dir_path)
-        print("DIR DIR {}".format(files_dir_path))
-        dir_name = "/" + dir_name
-        return dir_name, files_dir_path
+        return files_dir_path
     except FileExistsError as error:
         logger.error("File exist error:" f"{(error)}")
         raise error
