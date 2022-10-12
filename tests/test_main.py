@@ -38,7 +38,6 @@ def test_find_content(tmpdir):
 
 def test_dowloads(tmpdir, requests_mock):
     html_raw = read_file(RAW)
-    html_expected = read_file(HTML)
     image = read_file(IMG)
     css = read_file(CSS)
     js = read_file(JS)
