@@ -10,39 +10,21 @@ from page_loader.directory import make_path
 TAGS = {"img": "src", "link": "href", "script": "src"}
 
 
-def download_content(resources):
-    count = len(resources)
-    logger.info('I will download {} content links'.format(count))
-    with Bar("Processing", max=count) as bar:
-        for res in resources:
-            try:
-                get_web_resource(
-                    res['resource_url'], res['resource_path'])
-                bar.next()
-            except (PermissionError, requests.RequestException) as e:
-                logger.warning(e)
-                logger.warning('Сan`t download {}'.format(res['resource_url']))
-                pass
-        bar.finish()
-
-
-def update_html(page_path, soup):
-    with open(page_path, 'w') as hp:
-        hp.write(soup.prettify())
-
-
 def find_resources(soup, dir_path, url):
+    logger.info("HERE IN FIND")
     tags = TAGS.keys()
     resource_tags = soup.find_all(tags)
     filter_resources = []
     tags_list = []
     for res in resource_tags:
+        logger.info(res)
         attr = TAGS[res.name]
         attr_value = res.get(attr)
         if not compare_host_name(attr_value, url):
             continue
         resource_url = urljoin(url, attr_value).rstrip("/")
         resource_name = create_name(resource_url, "file")
+        logger.info("Resource name: {}".format(resource_name))
         resource_path = make_path(dir_path, resource_name)
         new_attr_value = os.path.join(
             os.path.basename(dir_path), resource_name)
@@ -60,7 +42,32 @@ def find_resources(soup, dir_path, url):
                 'new_attr_value': new_attr_value
             }
         )
+    logger.info('I found {} res'.format(len(filter_resources)))
     return filter_resources, tags_list
+
+
+def download_content(resources):
+    logger.info("HERE IN download_content")
+    count = len(resources)
+    logger.info('I will download {} content links'.format(count))
+    with Bar("Processing", max=count) as bar:
+        for res in resources:
+            print("RES in down {}".format(res))
+            logger.info('Resourse {}'.format(res))
+            try:
+                get_web_resource(
+                    res['resource_url'], res['resource_path'])
+                bar.next()
+            except (PermissionError, requests.RequestException) as e:
+                logger.warning(e)
+                logger.warning('Сan`t download {}'.format(res['resource_url']))
+                pass
+        bar.finish()
+
+
+def update_html(page_path, soup):
+    with open(page_path, 'w') as hp:
+        hp.write(soup.prettify())
 
 
 def compare_host_name(url, parent_url):

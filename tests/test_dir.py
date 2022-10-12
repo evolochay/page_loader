@@ -14,11 +14,10 @@ def test_make_path(tmpdir):
 
 
 def test_create_dir(tmpdir):
-    dir_name, dir = create_dir(tmpdir, URL_COURSES)
-    assert os.path.exists(dir)
+    dir_name= create_dir(tmpdir, URL_COURSES)
     assert len(dir_name) > 1
     with pytest.raises(FileExistsError):
-        dir_name, dir = create_dir(tmpdir, URL_COURSES)
+        dir_name = create_dir(tmpdir, URL_COURSES)
 
 
 def test_directory_doesnt_exist(tmpdir):

@@ -21,7 +21,7 @@ def make_url_request(url):
 
 
 def make_page_path(url, path):
-    logger.info("download html page: {}".format(url))
+    logger.info("path: {}".format(path))
     html_name = create_name(url, "page")
     page_path = make_path(path, html_name)
     return page_path
