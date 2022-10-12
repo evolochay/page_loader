@@ -11,7 +11,6 @@ TAGS = {"img": "src", "link": "href", "script": "src"}
 
 
 def find_resources(soup, dir_path, url):
-    logger.info("HERE IN FIND")
     tags = TAGS.keys()
     resource_tags = soup.find_all(tags)
     filter_resources = []
@@ -47,13 +46,10 @@ def find_resources(soup, dir_path, url):
 
 
 def download_content(resources):
-    logger.info("HERE IN download_content")
     count = len(resources)
     logger.info('I will download {} content links'.format(count))
     with Bar("Processing", max=count) as bar:
         for res in resources:
-            print("RES in down {}".format(res))
-            logger.info('Resourse {}'.format(res))
             try:
                 get_web_resource(
                     res['resource_url'], res['resource_path'])
@@ -81,11 +77,9 @@ def get_web_resource(url, path):
     with open(path, 'wb') as file:
         for chunk in response.iter_content(chunk_size=1000):
             file.write(chunk)
-    logger.debug('The resource was saved successfully.')
 
 
 def replace_res_path(tags):
-    logger.debug("Replace old page resource paths with new ones")
     for tag in tags:
         new_tag = tag['tag']
         new_tag[tag['attr']] = tag['new_attr_value']
