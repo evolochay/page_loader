@@ -20,7 +20,6 @@ def create_dir(dir_path, page_adress):
 
 def chech_dir_access(dir_path):
     if not os.access(dir_path, os.R_OK & os.W_OK & os.X_OK):
-        logger.error("You may not use this directory")
-        raise PermissionError
+        raise PermissionError("You may not use this directory")
     else:
         return dir_path

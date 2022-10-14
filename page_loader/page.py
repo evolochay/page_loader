@@ -1,5 +1,4 @@
 import requests
-from bs4 import BeautifulSoup
 from logs.log_config import logger
 from page_loader.naming import create_name
 from page_loader.directory import make_path
@@ -33,8 +32,3 @@ def write_data(file, data):
             f.write(data)
     except PermissionError:
         raise
-
-
-def get_soup(response):
-    soup = BeautifulSoup(response, "html.parser")
-    return soup

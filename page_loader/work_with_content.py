@@ -1,25 +1,26 @@
 from asyncio.log import logger
 import os
 import requests
-from urllib.parse import urljoin, urlparse
 from progress.bar import Bar
+from urllib.parse import urljoin, urlparse
 from page_loader.naming import create_name
 from page_loader.directory import make_path
+from page_loader.classes import Tags
 
 
-TAGS = {"img": "src", "link": "href", "script": "src"}
+RESOURCE_TAGS = {"img": "src", "link": "href", "script": "src"}
 
 
 def find_resources(soup, dir_path, url):
-    tags = TAGS.keys()
+    tags = RESOURCE_TAGS.keys()
     resource_tags = soup.find_all(tags)
     filter_resources = []
     tags_list = []
     for res in resource_tags:
         logger.info(res)
-        attr = TAGS[res.name]
+        attr = RESOURCE_TAGS[res.name]
         attr_value = res.get(attr)
-        if not compare_host_name(attr_value, url):
+        if not is_same_host_name(attr_value, url):
             continue
         resource_url = urljoin(url, attr_value).rstrip("/")
         resource_name = create_name(resource_url, "file")
@@ -34,13 +35,7 @@ def find_resources(soup, dir_path, url):
                 'resource_path': resource_path
             }
         )
-        tags_list.append(
-            {
-                'tag': res,
-                'attr': attr,
-                'new_attr_value': new_attr_value
-            }
-        )
+        tags_list.append(Tags(res, attr, new_attr_value))
     logger.info('I found {} res'.format(len(filter_resources)))
     return filter_resources, tags_list
 
@@ -66,7 +61,7 @@ def update_html(page_path, soup):
         hp.write(soup.prettify())
 
 
-def compare_host_name(url, parent_url):
+def is_same_host_name(url, parent_url):
     url_domain = urlparse(url).netloc
     same_domain_name = urlparse(url).netloc != urlparse(parent_url).netloc
     return not (url_domain and same_domain_name)
@@ -81,5 +76,5 @@ def get_web_resource(url, path):
 
 def replace_res_path(tags):
     for tag in tags:
-        new_tag = tag['tag']
-        new_tag[tag['attr']] = tag['new_attr_value']
+        new_tag = tag.tag
+        new_tag[tag.attr] = tag.new_attr_value
