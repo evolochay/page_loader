@@ -1,6 +1,6 @@
 import requests
 from logs.log_config import logger
-from page_loader.naming import create_name
+from page_loader.naming import create_page_name
 from page_loader.directory import make_path
 
 
@@ -21,7 +21,7 @@ def make_url_request(url):
 
 def make_page_path(url, path):
     logger.info("path: {}".format(path))
-    html_name = create_name(url, "page")
+    html_name = create_page_name(url)
     page_path = make_path(path, html_name)
     return page_path
 

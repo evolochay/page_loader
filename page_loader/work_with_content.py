@@ -3,9 +3,9 @@ import os
 import requests
 from progress.bar import Bar
 from urllib.parse import urljoin, urlparse
-from page_loader.naming import create_name
+from page_loader.naming import create_page_name
 from page_loader.directory import make_path
-from page_loader.classes import Tags
+from page_loader.classes import Tag, Resourse
 
 
 RESOURCE_TAGS = {"img": "src", "link": "href", "script": "src"}
@@ -23,19 +23,13 @@ def find_resources(soup, dir_path, url):
         if not is_same_host_name(attr_value, url):
             continue
         resource_url = urljoin(url, attr_value).rstrip("/")
-        resource_name = create_name(resource_url, "file")
+        resource_name = create_page_name(resource_url)
         logger.info("Resource name: {}".format(resource_name))
         resource_path = make_path(dir_path, resource_name)
         new_attr_value = os.path.join(
             os.path.basename(dir_path), resource_name)
-
-        filter_resources.append(
-            {
-                'resource_url': resource_url,
-                'resource_path': resource_path
-            }
-        )
-        tags_list.append(Tags(res, attr, new_attr_value))
+        filter_resources.append(Resourse(resource_url, resource_path))
+        tags_list.append(Tag(res, attr, new_attr_value))
     logger.info('I found {} res'.format(len(filter_resources)))
     return filter_resources, tags_list
 
@@ -47,7 +41,7 @@ def download_content(resources):
         for res in resources:
             try:
                 get_web_resource(
-                    res['resource_url'], res['resource_path'])
+                    res.resource_url, res.resource_path)
                 bar.next()
             except (PermissionError, requests.RequestException) as e:
                 logger.warning(e)
@@ -56,15 +50,10 @@ def download_content(resources):
         bar.finish()
 
 
-def update_html(page_path, soup):
-    with open(page_path, 'w') as hp:
-        hp.write(soup.prettify())
-
-
 def is_same_host_name(url, parent_url):
     url_domain = urlparse(url).netloc
-    same_domain_name = urlparse(url).netloc != urlparse(parent_url).netloc
-    return not (url_domain and same_domain_name)
+    is_same_domain_name = urlparse(url).netloc != urlparse(parent_url).netloc
+    return not (url_domain and is_same_domain_name)
 
 
 def get_web_resource(url, path):

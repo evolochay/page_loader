@@ -1,5 +1,5 @@
 import os
-from page_loader.naming import create_name
+from page_loader.naming import prepare_url_to_name_creation, create_dir_name
 from logs.log_config import logger
 
 
@@ -8,7 +8,7 @@ def make_path(path, file_name):
 
 
 def create_dir(dir_path, page_adress):
-    dir_name = create_name(page_adress, "dir")
+    dir_name = create_dir_name(page_adress)
     files_dir_path = make_path(dir_path, dir_name)
     try:
         os.mkdir(files_dir_path)
