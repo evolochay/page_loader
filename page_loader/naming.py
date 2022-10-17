@@ -1,6 +1,5 @@
 import re
 import os
-from unittest import result
 from urllib.parse import urlparse, urlunparse
 
 
