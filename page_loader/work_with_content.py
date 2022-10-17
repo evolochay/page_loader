@@ -3,7 +3,7 @@ import os
 import requests
 from progress.bar import Bar
 from urllib.parse import urljoin, urlparse
-from page_loader.naming import create_page_name
+from page_loader.naming import create_file_name
 from page_loader.directory import make_path
 from page_loader.classes import Tag, Resourse
 
@@ -23,7 +23,7 @@ def find_resources(soup, dir_path, url):
         if not is_same_host_name(attr_value, url):
             continue
         resource_url = urljoin(url, attr_value).rstrip("/")
-        resource_name = create_page_name(resource_url)
+        resource_name = create_file_name(resource_url)
         logger.info("Resource name: {}".format(resource_name))
         resource_path = make_path(dir_path, resource_name)
         new_attr_value = os.path.join(
