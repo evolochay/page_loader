@@ -32,3 +32,8 @@ def write_data(file, data):
             f.write(data)
     except PermissionError:
         raise
+
+
+def update_html(page_path, soup):
+    with open(page_path, 'w') as hp:
+        hp.write(soup.prettify())

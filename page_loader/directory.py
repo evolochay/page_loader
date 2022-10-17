@@ -1,5 +1,5 @@
 import os
-from page_loader.naming import prepare_url_to_name_creation, create_dir_name
+from page_loader.naming import create_dir_name
 from logs.log_config import logger
 
 
