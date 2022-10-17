@@ -1,5 +1,6 @@
 import re
 import os
+from unittest import result
 from urllib.parse import urlparse, urlunparse
 
 
@@ -15,7 +16,10 @@ def create_page_name(url):
 
 def create_file_name(url):
     path_part, ending = prepare_url_to_name_creation(url)
-    return "-".join(re.findall(r"\w+", path_part)) + ending
+    result = "-".join(re.findall(r"\w+", path_part))
+    if ending == "":
+        return result + ".html"
+    return result + ending
 
 
 def prepare_url_to_name_creation(url):
