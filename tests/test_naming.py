@@ -1,4 +1,3 @@
-import pytest
 from page_loader.naming import make_clear_url, make_url_with_scheme
 from page_loader.naming import create_dir_name, create_file_name, create_page_name
 
