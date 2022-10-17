@@ -34,31 +34,3 @@ def test_find_content(tmpdir):
             print(res)
         assert len(all_resources) == 5
         assert len(tag_lists) == 5
-
-
-def test_dowloads(tmpdir, requests_mock):
-    html_raw = read_file(RAW)
-    image = read_file(IMG)
-    css = read_file(CSS)
-    js = read_file(JS)
-
-    requests_mock.get(URL, content=html_raw)
-    requests_mock.get(URL_IMG, content=image)
-    requests_mock.get(URL_CSS, content=css)
-    requests_mock.get(URL_JS, content=js)
-    result = download(URL, tmpdir)
-
-    img_path = os.path.join(tmpdir, EXPECTED_IMG)
-    css_path = os.path.join(tmpdir, EXPECTED_CSS)
-    js_path = os.path.join(tmpdir, EXPECTED_JS)
-
-    actual_img = read_file(img_path)
-    assert actual_img == image
-
-    actual_css = read_file(css_path)
-    assert actual_css == css
-
-    actual_js = read_file(js_path)
-    assert actual_js == js
-
-    assert len(result) > 0

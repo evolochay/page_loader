@@ -10,6 +10,9 @@ def make_path(path, file_name):
 def create_dir(dir_path, page_adress):
     dir_name = create_dir_name(page_adress)
     files_dir_path = make_path(dir_path, dir_name)
+    logger.info("DIR NAME {}".format(dir_name))
+    logger.info("DIR PATH NAME {}".format(files_dir_path))
+
     try:
         os.mkdir(files_dir_path)
         return files_dir_path
