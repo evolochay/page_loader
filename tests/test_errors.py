@@ -4,7 +4,7 @@ import os
 from page_loader.user_messages import Message
 from page_loader.page_loader import download
 from tests.test_main import read_file
-from page_loader.page import make_url_request
+from page_loader.page import get_page_content
 
 
 INVALID_URL = "htps://ru.hexlet.io/courses"
@@ -39,4 +39,4 @@ def test_http_errors(code, requests_mock):
         status_code=code,
     )
     with pytest.raises(requests.exceptions.HTTPError):
-        make_url_request(INVALID_URL)
+        get_page_content(INVALID_URL)

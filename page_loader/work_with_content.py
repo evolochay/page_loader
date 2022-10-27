@@ -23,6 +23,7 @@ def find_resources(soup, dir_path, url):
         if not is_same_host_name(attr_value, url):
             continue
         resource_url = urljoin(url, attr_value).rstrip("/")
+        print(f"Absolute resource url: {resource_url}")
         resource_name = create_file_name(resource_url)
         logger.info("Resource name: {}".format(resource_name))
         resource_path = make_path(dir_path, resource_name)
@@ -50,10 +51,12 @@ def download_content(resources):
         bar.finish()
 
 
-def is_same_host_name(url, parent_url):
-    url_domain = urlparse(url).netloc
-    is_same_domain_name = urlparse(url).netloc != urlparse(parent_url).netloc
-    return not (url_domain and is_same_domain_name)
+def is_same_host_name(resource_url, page_url):
+    resource_domain = urlparse(resource_url).netloc
+    page_domain = urlparse(page_url).netloc
+    if resource_domain == "" or resource_domain == page_domain:
+        return True
+    return False
 
 
 def get_web_resource(url, path):

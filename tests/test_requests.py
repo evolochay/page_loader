@@ -1,7 +1,7 @@
 import os
 import requests
 import pytest
-from page_loader.page import make_url_request, make_page_path
+from page_loader.page import get_page_content, make_page_path
 from page_loader.page_loader import download
 from tests.test_main import read_file
 
@@ -24,12 +24,12 @@ def test_make_url_request(requests_mock):
         content=read_file("tests/fixtures/test_file.txt"),
         status_code=200,
     )
-    result = make_url_request(INVALID_URL)
+    result = get_page_content(INVALID_URL)
     assert result == b"Just file for test"
 
 
 def test_with_timeout(requests_mock, tmpdir):
     requests_mock.get(URL, exc=requests.exceptions.Timeout)
     with pytest.raises(requests.exceptions.Timeout):
-        make_url_request(URL)
+        get_page_content(URL)
         download(URL, tmpdir)

@@ -4,7 +4,7 @@ from page_loader.naming import create_page_name
 from page_loader.directory import make_path
 
 
-def make_url_request(url):
+def get_page_content(url):
     logger.info("Here is URL {}".format(url))
     response = requests.get(url)
     try:
