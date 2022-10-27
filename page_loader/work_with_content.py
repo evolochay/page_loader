@@ -23,7 +23,6 @@ def find_resources(soup, dir_path, url):
         if not is_same_host_name(attr_value, url):
             continue
         resource_url = urljoin(url, attr_value).rstrip("/")
-        print(f"Absolute resource url: {resource_url}")
         resource_name = create_file_name(resource_url)
         logger.info("Resource name: {}".format(resource_name))
         resource_path = make_path(dir_path, resource_name)
