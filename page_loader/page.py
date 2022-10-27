@@ -34,6 +34,6 @@ def write_data(file, data):
         raise
 
 
-def update_html(page_path, soup):
-    with open(page_path, 'w') as hp:
-        hp.write(soup.prettify())
+def write_data_to_file(path, data):
+    with open(path, 'w') as hp:
+        hp.write(data)
