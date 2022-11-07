@@ -1,16 +1,10 @@
 import os
 import pytest
-from page_loader.directory import make_path, create_dir
+from page_loader.os_data import create_dir
 from page_loader.page_loader import download
 
 
 URL_COURSES = "https://ru.hexlet.io/courses"
-
-
-def test_make_path(tmpdir):
-    file_name = "file_test_name"
-    result = os.path.join(tmpdir, file_name)
-    assert make_path(tmpdir, file_name) == result
 
 
 def test_create_dir(tmpdir):

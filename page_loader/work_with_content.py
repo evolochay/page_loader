@@ -4,8 +4,8 @@ import requests
 from progress.bar import Bar
 from urllib.parse import urljoin, urlparse
 from page_loader.naming import create_file_name
-from page_loader.directory import make_path
 from page_loader.classes import Tag, Resourse
+from page_loader.url_requests import get_web_resource
 
 
 RESOURCE_TAGS = {"img": "src", "link": "href", "script": "src"}
@@ -25,7 +25,7 @@ def find_resources(soup, dir_path, url):
         resource_url = urljoin(url, attr_value).rstrip("/")
         resource_name = create_file_name(resource_url)
         logger.info("Resource name: {}".format(resource_name))
-        resource_path = make_path(dir_path, resource_name)
+        resource_path = os.path.join(dir_path, resource_name)
         new_attr_value = os.path.join(
             os.path.basename(dir_path), resource_name)
         filter_resources.append(Resourse(resource_url, resource_path))
@@ -56,13 +56,6 @@ def is_same_host_name(resource_url, page_url):
     if resource_domain == "" or resource_domain == page_domain:
         return True
     return False
-
-
-def get_web_resource(url, path):
-    response = requests.get(url, stream=True)
-    with open(path, 'wb') as file:
-        for chunk in response.iter_content(chunk_size=1000):
-            file.write(chunk)
 
 
 def replace_res_path(tags):

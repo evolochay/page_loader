@@ -1,7 +1,5 @@
 import requests
 from logs.log_config import logger
-from page_loader.naming import create_page_name
-from page_loader.directory import make_path
 
 
 def get_page_content(url):
@@ -19,21 +17,8 @@ def get_page_content(url):
     return response.content
 
 
-def make_page_path(url, path):
-    logger.info("path: {}".format(path))
-    html_name = create_page_name(url)
-    page_path = make_path(path, html_name)
-    return page_path
-
-
-def write_data(file, data):
-    try:
-        with open(file, 'wb') as f:
-            f.write(data)
-    except PermissionError:
-        raise
-
-
-def write_data_to_file(path, data):
-    with open(path, 'w') as hp:
-        hp.write(data)
+def get_web_resource(url, path):
+    response = requests.get(url, stream=True)
+    with open(path, 'wb') as file:
+        for chunk in response.iter_content(chunk_size=1000):
+            file.write(chunk)
