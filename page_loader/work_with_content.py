@@ -4,9 +4,20 @@ import requests
 from progress.bar import Bar
 from urllib.parse import urljoin
 from page_loader.url import create_file_name, is_same_host_name
-from page_loader.classes import Tag, Resourse
 from page_loader.io import get_web_resource
 
+
+class Tag:
+    def __init__(self, tag, attr, new_attr_value):
+        self.tag = tag
+        self.attr = attr
+        self.new_attr_value = new_attr_value
+
+
+class Resourse:
+    def __init__(self, resource_url, resource_path):
+        self.resource_url = resource_url
+        self.resource_path = resource_path
 
 
 RESOURCE_TAGS = {"img": "src", "link": "href", "script": "src"}
