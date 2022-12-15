@@ -1,6 +1,6 @@
 import os
 import pytest
-from page_loader.os_data import create_dir
+from page_loader.io import create_dir
 from page_loader.page_loader import download
 
 

@@ -42,3 +42,11 @@ def make_url_with_scheme(page_url, res_url):
         return res_url
     else:
         return page_url + res_url
+
+
+def is_same_host_name(resource_url, page_url):
+    resource_domain = urlparse(resource_url).netloc
+    page_domain = urlparse(page_url).netloc
+    if resource_domain == "" or resource_domain == page_domain:
+        return True
+    return False

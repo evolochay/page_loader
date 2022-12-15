@@ -1,5 +1,5 @@
-from page_loader.naming import make_clear_url, make_url_with_scheme
-from page_loader.naming import create_dir_name, create_file_name, create_page_name
+from page_loader.url import make_clear_url, make_url_with_scheme
+from page_loader.url import create_dir_name, create_file_name, create_page_name
 
 
 URL_COURSES = "https://ru.hexlet.io/courses"

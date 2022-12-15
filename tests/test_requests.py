@@ -1,8 +1,7 @@
 import os
 import requests
 import pytest
-from page_loader.url_requests import get_page_content
-from page_loader.os_data import make_page_path
+from page_loader.io import get_page_content, make_page_path
 from page_loader.page_loader import download
 from tests.test_main import read_file
 

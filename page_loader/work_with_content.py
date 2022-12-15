@@ -2,10 +2,11 @@ from asyncio.log import logger
 import os
 import requests
 from progress.bar import Bar
-from urllib.parse import urljoin, urlparse
-from page_loader.naming import create_file_name
+from urllib.parse import urljoin
+from page_loader.url import create_file_name, is_same_host_name
 from page_loader.classes import Tag, Resourse
-from page_loader.url_requests import get_web_resource
+from page_loader.io import get_web_resource
+
 
 
 RESOURCE_TAGS = {"img": "src", "link": "href", "script": "src"}
@@ -48,14 +49,6 @@ def download_content(resources):
                 logger.warning('Сan`t download {}'.format(res['resource_url']))
                 pass
         bar.finish()
-
-
-def is_same_host_name(resource_url, page_url):
-    resource_domain = urlparse(resource_url).netloc
-    page_domain = urlparse(page_url).netloc
-    if resource_domain == "" or resource_domain == page_domain:
-        return True
-    return False
 
 
 def replace_res_path(tags):

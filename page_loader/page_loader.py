@@ -1,8 +1,8 @@
 import os
 from bs4 import BeautifulSoup
-from page_loader.url_requests import get_page_content
-from page_loader.os_data import make_page_path, write_data_to_file
-from page_loader.os_data import create_dir, check_dir_access
+from page_loader.io import get_page_content
+from page_loader.io import make_page_path, write_data_to_file
+from page_loader.io import create_dir, check_dir_access
 from page_loader.work_with_content import find_resources
 from page_loader.work_with_content import download_content, replace_res_path
 from logs.log_config import logger
