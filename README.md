@@ -2,7 +2,7 @@
 ## Description:
 
 Educational project.
-You can use this tool for save any static HTML-page and it`s content.
+You can use this tool for save any static HTML-page and its content.
 
 ## Dependencies
 
@@ -18,7 +18,7 @@ You can use this tool for save any static HTML-page and it`s content.
   ```
   make build
   make package-install
-
+  ```
 
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/foxy-chay/python-project-lvl3/workflows/hexlet-check/badge.svg)](https://github.com/foxy-chay/python-project-lvl3/actions)
